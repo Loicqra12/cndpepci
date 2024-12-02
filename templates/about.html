@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}À propos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1455849318743-b2233052fcff" class="img-fluid rounded" alt="Detective office">
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-4">À propos de la CNDPEPCI</h1>
+            {% if page %}
+                {{ page.content|safe }}
+            {% else %}
+                <p class="lead">La Chambre Nationale de Détective Privé et Enquêteur Professionnel de Côte d'Ivoire (CNDPEPCI) est l'organisation de référence pour les professionnels de l'investigation privée.</p>
+                <p>Notre mission est de structurer et promouvoir la profession de détective privé en Côte d'Ivoire, tout en garantissant le respect des normes éthiques et professionnelles les plus élevées.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="mb-4">Notre mission</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Structurer</h5>
+                            <p class="card-text">Organiser et encadrer la profession de détective privé en Côte d'Ivoire.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Former</h5>
+                            <p class="card-text">Assurer la formation continue et le développement professionnel des membres.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Protéger</h5>
+                            <p class="card-text">Garantir le respect de l'éthique et la protection des droits des clients.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Notre vision</h2>
+            <div class="bg-light p-4 rounded">
+                <p class="lead mb-0">Faire de la profession de détective privé en Côte d'Ivoire une référence en matière de professionnalisme, d'éthique et d'excellence dans le domaine de l'investigation privée.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

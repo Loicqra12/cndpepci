@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="hero-section position-relative mb-5">
+    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40" class="w-100" alt="Professional Investigation" style="max-height: 500px; object-fit: cover;">
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+        <h1 class="display-4">CNDPEPCI</h1>
+        <p class="lead">Chambre Nationale de Détective Privé et Enquêteur Professionnel de Côte d'Ivoire</p>
+    </div>
+</div>
+
+<section class="mb-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Bienvenue à la CNDPEPCI</h2>
+            <p class="lead">La référence des détectives privés en Côte d'Ivoire</p>
+            <p>La CNDPEPCI structure et promeut la profession de détective privé en Côte d'Ivoire, garantissant 
+            professionnalisme et éthique dans le domaine des enquêtes privées.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('about') }}" class="btn btn-primary">En savoir plus</a>
+                <a href="{{ url_for('directory') }}" class="btn btn-outline-primary ms-2">Consulter l'annuaire</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Accès rapide</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('directory') }}" class="text-decoration-none">→ Trouver un détective</a></li>
+                        <li><a href="{{ url_for('deontology') }}" class="text-decoration-none">→ Code de déontologie</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="text-decoration-none">→ Nous contacter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2>Actualités récentes</h2>
+    <div class="row">
+        {% for article in news %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" class="card-img-top" alt="{{ article.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.content|truncate(150) }}</p>
+                    <p class="text-muted">{{ article.date_posted.strftime('%d/%m/%Y') }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2>Nos services</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Enquêtes privées</h5>
+                    <p class="card-text">Investigations discrètes et professionnelles pour les particuliers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Enquêtes d'entreprise</h5>
+                    <p class="card-text">Solutions adaptées aux besoins des professionnels.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Surveillance</h5>
+                    <p class="card-text">Services de surveillance discrets et efficaces.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

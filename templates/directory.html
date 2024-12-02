@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Annuaire des Détectives{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Annuaire des Détectives Privés</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form id="directory-search-form" class="row g-3">
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="search" name="search" placeholder="Rechercher par nom...">
+                        </div>
+                        <div class="col-md-5">
+                            <select class="form-select" id="region" name="region">
+                                <option value="">Toutes les régions</option>
+                                <option value="abidjan">Abidjan</option>
+                                <option value="yamoussoukro">Yamoussoukro</option>
+                                <option value="bouake">Bouaké</option>
+                                <option value="korhogo">Korhogo</option>
+                                <option value="san_pedro">San-Pédro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for member in members %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img src="https://i.pravatar.cc/150?img={{ member.id }}" class="rounded-circle mb-3" style="width: 100px; height: 100px;" alt="{{ member.first_name }} {{ member.last_name }}">
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="card-title">{{ member.first_name }} {{ member.last_name }}</h5>
+                            <p class="card-text">
+                                <i data-feather="map-pin" class="me-2"></i> {{ member.region|title }}
+                            </p>
+                            {% if member.specialization %}
+                            <p class="card-text">
+                                <i data-feather="briefcase" class="me-2"></i> {{ member.specialization }}
+                            </p>
+                            {% endif %}
+                            {% if member.email %}
+                            <p class="card-text">
+                                <i data-feather="mail" class="me-2"></i> {{ member.email }}
+                            </p>
+                            {% endif %}
+                            {% if member.phone %}
+                            <p class="card-text">
+                                <i data-feather="phone" class="me-2"></i> {{ member.phone }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if member.bio %}
+                    <div class="mt-3">
+                        <h6>À propos</h6>
+                        <p class="card-text">{{ member.bio|truncate(200) }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not members %}
+    <div class="text-center py-5">
+        <p class="lead">Aucun résultat trouvé pour votre recherche.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Le Président{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1496368077930-c1e31b4e5b44" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Professional office">
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="https://i.pravatar.cc/300" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Président de la CNDPEPCI">
+                    <h4 class="card-title">Le Président</h4>
+                    <p class="card-text text-muted">CNDPEPCI</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h1 class="mb-4">Message du Président</h1>
+            {% if page %}
+                {{ page.content|safe }}
+            {% else %}
+                <p class="lead">Chers visiteurs, confrères et partenaires,</p>
+                <p>En tant que Président de la Chambre Nationale de Détective Privé et Enquêteur Professionnel de Côte d'Ivoire, je suis honoré de vous accueillir sur notre site officiel.</p>
+                <p>Notre engagement est de promouvoir l'excellence dans notre profession, tout en garantissant le respect des normes éthiques les plus strictes. La CNDPEPCI œuvre quotidiennement pour structurer et valoriser le métier de détective privé en Côte d'Ivoire.</p>
+                <p>Nous sommes déterminés à faire de notre profession une référence en matière d'investigation privée, au service des particuliers et des entreprises.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Nos engagements</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>Professionnalisme</h5>
+                            <p>Garantir des services d'investigation de haute qualité.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Éthique</h5>
+                            <p>Respecter une déontologie stricte dans toutes nos actions.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Innovation</h5>
+                            <p>Adopter les meilleures pratiques et technologies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

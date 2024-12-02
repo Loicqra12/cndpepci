@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Déontologie{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Professional ethics">
+            <h1 class="mt-4">Code de Déontologie</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            {% if page %}
+                {{ page.content|safe }}
+            {% else %}
+            <div class="content">
+                <h2>Principes fondamentaux</h2>
+                <p class="lead">Le code de déontologie de la CNDPEPCI établit les règles et principes éthiques que tous les membres s'engagent à respecter.</p>
+                
+                <div class="mb-4">
+                    <h3>1. Confidentialité</h3>
+                    <p>Tous les membres s'engagent à maintenir une confidentialité absolue concernant les informations obtenues dans le cadre de leurs missions.</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3>2. Légalité</h3>
+                    <p>Les investigations doivent être menées dans le strict respect des lois et règlements en vigueur en Côte d'Ivoire.</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3>3. Professionnalisme</h3>
+                    <p>Les membres s'engagent à maintenir un haut niveau de compétence et à se former continuellement.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Points clés</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i data-feather="check-circle" class="text-success me-2"></i>
+                            Respect de la vie privée
+                        </li>
+                        <li class="mb-3">
+                            <i data-feather="check-circle" class="text-success me-2"></i>
+                            Transparence des méthodes
+                        </li>
+                        <li class="mb-3">
+                            <i data-feather="check-circle" class="text-success me-2"></i>
+                            Protection des données
+                        </li>
+                        <li class="mb-3">
+                            <i data-feather="check-circle" class="text-success me-2"></i>
+                            Devoir de conseil
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

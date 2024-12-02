@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Nos Activités{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1504805572947-34fad45aed93" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Investigation activities">
+            <h1 class="mt-4">Nos Activités</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            {% if page %}
+                {{ page.content|safe }}
+            {% else %}
+            <div class="content">
+                <p class="lead">La CNDPEPCI propose une large gamme de services d'investigation professionnelle répondant aux besoins des particuliers et des entreprises.</p>
+                
+                <h2 class="mb-4">Nos domaines d'intervention</h2>
+                
+                <div class="mb-4">
+                    <h3>Enquêtes pour particuliers</h3>
+                    <ul>
+                        <li>Recherche de personnes disparues</li>
+                        <li>Enquêtes familiales</li>
+                        <li>Vérifications pré-matrimoniales</li>
+                        <li>Surveillance et filature</li>
+                    </ul>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Services aux entreprises</h3>
+                    <ul>
+                        <li>Enquêtes de pré-embauche</li>
+                        <li>Lutte contre la concurrence déloyale</li>
+                        <li>Protection de la propriété intellectuelle</li>
+                        <li>Enquêtes financières</li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Nos garanties</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i data-feather="shield" class="text-primary me-2"></i>
+                            Confidentialité absolue
+                        </li>
+                        <li class="mb-3">
+                            <i data-feather="check-square" class="text-primary me-2"></i>
+                            Professionnalisme
+                        </li>
+                        <li class="mb-3">
+                            <i data-feather="clock" class="text-primary me-2"></i>
+                            Réactivité
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Contact rapide</h4>
+                    <p>Besoin d'un renseignement sur nos services ?</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Contactez-nous</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
