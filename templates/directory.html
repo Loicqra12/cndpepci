@@ -5,38 +5,35 @@
 {% block extra_css %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
-.member-card {
-    transition: transform 0.2s;
-    height: 100%;
-}
-.member-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
 .member-photo {
-    width: 200px;
-    height: 200px;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
-    border-radius: 10px;
-    margin: 0 auto;
+    border-radius: 50%;
+}
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+.table td {
+    vertical-align: middle;
 }
 .badge-domain {
-    background-color: #007bff;
-    color: white;
+    background-color: #e9ecef;
+    color: #495057;
     font-size: 0.85em;
+    margin-right: 0.25rem;
 }
 .badge-certification {
-    background-color: #28a745;
-    color: white;
+    background-color: #e7f5ee;
+    color: #28a745;
     font-size: 0.85em;
+    margin-right: 0.25rem;
 }
-.info-group {
-    margin-bottom: 1rem;
-}
-.info-group-title {
-    font-size: 0.9em;
+.info-icon {
     color: #6c757d;
-    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+    margin-right: 0.5rem;
 }
 </style>
 {% endblock %}
@@ -50,84 +47,75 @@
         </div>
     </div>
 
-    <div class="row g-4">
-        {% for member in members %}
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card member-card">
-                <div class="card-body">
-                    <!-- Photo et Informations Principales -->
-                    <div class="text-center mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Informations Principales</th>
+                    <th>Coordonnées</th>
+                    <th>Domaines d'expertise</th>
+                    <th>Certifications</th>
+                    <th>Expérience</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>
                         {% if member.photo_url %}
-                        <img src="{{ member.photo_url }}" class="member-photo mb-3" alt="{{ member.first_name }}">
+                        <img src="{{ member.photo_url }}" class="member-photo" alt="{{ member.first_name }}">
                         {% else %}
-                        <img src="https://i.pravatar.cc/200?img={{ member.id }}" class="member-photo mb-3" alt="{{ member.first_name }}">
+                        <img src="https://i.pravatar.cc/80?img={{ member.id }}" class="member-photo" alt="{{ member.first_name }}">
                         {% endif %}
-                        <h4 class="card-title mb-1">{{ member.first_name }} {{ member.last_name }}</h4>
-                        <p class="text-muted mb-2">{{ member.role }}</p>
-                        <p class="small text-primary mb-2">{{ member.license_number }}</p>
-                    </div>
-
-                    <!-- Agence -->
-                    <div class="info-group">
-                        <h6 class="info-group-title">
-                            <i class="fas fa-building me-2"></i>Agence
-                        </h6>
-                        <p class="mb-2">{{ member.agency_name }}</p>
-                    </div>
-
-                    <!-- Contact -->
-                    <div class="info-group">
-                        <h6 class="info-group-title">
-                            <i class="fas fa-address-card me-2"></i>Contact
-                        </h6>
-                        <p class="mb-1">
-                            <i class="fas fa-phone me-2"></i>
+                    </td>
+                    <td>
+                        <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
+                        <small class="text-muted">{{ member.role }}</small><br>
+                        <small class="text-primary">{{ member.license_number }}</small>
+                    </td>
+                    <td>
+                        <div data-bs-toggle="tooltip" title="Téléphone">
+                            <i class="fas fa-phone info-icon"></i>
                             <a href="tel:{{ member.phone }}" class="text-decoration-none">{{ member.phone }}</a>
-                        </p>
-                        <p class="mb-1">
-                            <i class="fas fa-envelope me-2"></i>
+                        </div>
+                        <div data-bs-toggle="tooltip" title="Email">
+                            <i class="fas fa-envelope info-icon"></i>
                             <a href="mailto:{{ member.email }}" class="text-decoration-none">{{ member.email }}</a>
-                        </p>
-                        <p class="mb-1">
-                            <i class="fas fa-map-marker-alt me-2"></i>{{ member.region }}
-                        </p>
-                    </div>
-
-                    <!-- Domaines d'expertise -->
-                    <div class="info-group">
-                        <h6 class="info-group-title">
-                            <i class="fas fa-briefcase me-2"></i>Domaines d'expertise
-                        </h6>
-                        <div>
-                            {% for domain in member.domains %}
-                            <span class="badge badge-domain me-1 mb-1">{{ domain }}</span>
-                            {% endfor %}
                         </div>
-                    </div>
-
-                    <!-- Certifications -->
-                    <div class="info-group">
-                        <h6 class="info-group-title">
-                            <i class="fas fa-certificate me-2"></i>Certifications
-                        </h6>
-                        <div>
-                            {% for cert in member.certifications %}
-                            <span class="badge badge-certification me-1 mb-1">{{ cert }}</span>
-                            {% endfor %}
+                        <div data-bs-toggle="tooltip" title="Région">
+                            <i class="fas fa-map-marker-alt info-icon"></i>{{ member.region }}
                         </div>
-                    </div>
-
-                    <!-- Expérience -->
-                    <div class="info-group">
-                        <h6 class="info-group-title">
-                            <i class="fas fa-clock me-2"></i>Expérience
-                        </h6>
-                        <p class="mb-0">{{ member.experience_years }} ans d'expérience</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+                    </td>
+                    <td>
+                        {% for domain in member.domains %}
+                        <span class="badge badge-domain">{{ domain }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for cert in member.certifications %}
+                        <span class="badge badge-certification">{{ cert }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <i class="fas fa-clock info-icon"></i>
+                        {{ member.experience_years }} ans
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+});
+</script>
 {% endblock %}
