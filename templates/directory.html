@@ -51,6 +51,12 @@
     display: inline-block;
     white-space: nowrap;
 }
+.agency-name {
+    font-size: 0.75em;
+    color: #495057;
+    display: block;
+    margin-bottom: 2px;
+}
 .text-muted.d-inline {
     display: inline-block !important;
 }
@@ -91,6 +97,9 @@
                     <td>
                         <strong>{{ member.first_name }} {{ member.last_name }}</strong> -
                         <small class="text-muted d-inline">{{ member.role }}</small><br>
+                        {% if member.agency_name %}
+                        <small class="agency-name">{{ member.agency_name }}</small><br>
+                        {% endif %}
                         <small class="text-primary license-number">{{ member.license_number }}</small>
                     </td>
                     <td>
