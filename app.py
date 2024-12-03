@@ -194,6 +194,12 @@ def admin_member_details(id):
     return render_template('admin/member_details.html', member=member)
 
 @app.route('/admin/members/<int:id>/edit', methods=['GET', 'POST'])
+@app.route('/admin/content')
+@login_required
+def admin_content():
+    pages = Page.query.all()
+    return render_template('admin/content.html', pages=pages)
+
 @login_required
 def admin_member_edit(id):
     member = Member.query.get_or_404(id)
