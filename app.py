@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, flash, redirect, url_for, request
+from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
@@ -179,6 +180,40 @@ def logout():
 @login_required
 def admin_dashboard():
     return render_template('admin/dashboard.html')
+
+@app.route('/admin/members')
+@login_required
+def admin_members():
+    members = Member.query.all()
+    return render_template('admin/members.html', members=members, form=MemberForm())
+
+@app.route('/admin/members/<int:id>')
+@login_required
+def admin_member_details(id):
+    member = Member.query.get_or_404(id)
+    return render_template('admin/member_details.html', member=member)
+
+@app.route('/admin/members/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_member_edit(id):
+    member = Member.query.get_or_404(id)
+    form = MemberForm(obj=member)
+    
+    if form.validate_on_submit():
+        form.populate_obj(member)
+        
+        # Gestion de la photo
+        if form.photo.data:
+            filename = secure_filename(form.photo.data.filename)
+            photo_path = os.path.join('static', 'images', 'members', filename)
+            form.photo.data.save(photo_path)
+            member.photo_url = filename
+            
+        db.session.commit()
+        flash('Membre mis à jour avec succès.', 'success')
+        return redirect(url_for('admin_members'))
+        
+    return render_template('admin/member_edit.html', form=form, member=member)
 
 # Initialize database
 with app.app_context():

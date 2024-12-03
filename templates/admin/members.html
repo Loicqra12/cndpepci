@@ -85,10 +85,10 @@
                     <thead>
                         <tr>
                             <th>Photo</th>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Région</th>
-                            <th>Spécialisation</th>
+                            <th>Informations personnelles</th>
+                            <th>Contact</th>
+                            <th>Agence & Licence</th>
+                            <th>Expertise</th>
                             <th>Statut</th>
                             <th>Actions</th>
                         </tr>
@@ -97,21 +97,51 @@
                         {% for member in members %}
                         <tr>
                             <td>
+                                {% if member.photo_url %}
+                                <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" class="rounded-circle" alt="{{ member.first_name }}" style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
                                 <img src="https://i.pravatar.cc/40?img={{ member.id }}" class="rounded-circle" alt="{{ member.first_name }}">
+                                {% endif %}
                             </td>
-                            <td>{{ member.first_name }} {{ member.last_name }}</td>
-                            <td>{{ member.email }}</td>
-                            <td>{{ member.region }}</td>
-                            <td>{{ member.specialization }}</td>
+                            <td>
+                                <strong>{{ member.first_name }} {{ member.last_name }}</strong>
+                                {% if member.role %}
+                                <br><small class="text-muted">{{ member.role }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small>
+                                    <i data-feather="mail" class="feather-small"></i> {{ member.email }}<br>
+                                    <i data-feather="phone" class="feather-small"></i> {{ member.phone }}<br>
+                                    <i data-feather="map-pin" class="feather-small"></i> {{ member.region }}
+                                </small>
+                            </td>
+                            <td>
+                                {% if member.agency_name %}
+                                <strong>{{ member.agency_name }}</strong><br>
+                                {% endif %}
+                                <small class="text-primary">{{ member.license_number }}</small>
+                            </td>
+                            <td>
+                                <small>
+                                    {{ member.specialization }}<br>
+                                    {% if member.experience_years %}
+                                    <span class="text-muted">{{ member.experience_years }} ans d'expérience</span>
+                                    {% endif %}
+                                </small>
+                            </td>
                             <td>
                                 <span class="badge bg-{{ 'success' if member.active else 'danger' }}">
                                     {{ 'Actif' if member.active else 'Inactif' }}
                                 </span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editMemberModal{{ member.id }}">
+                                <a href="{{ url_for('admin_member_details', id=member.id) }}" class="btn btn-sm btn-outline-info me-1">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a href="{{ url_for('admin_member_edit', id=member.id) }}" class="btn btn-sm btn-outline-primary me-1">
                                     <i data-feather="edit-2"></i>
-                                </button>
+                                </a>
                                 <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteMemberModal{{ member.id }}">
                                     <i data-feather="trash-2"></i>
                                 </button>
