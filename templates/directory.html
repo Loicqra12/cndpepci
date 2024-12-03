@@ -19,6 +19,10 @@
 .table td {
     vertical-align: middle;
     font-size: 0.85em;
+    border-right: 1px solid #e0e0e0;
+}
+.table td:last-child {
+    border-right: none;
 }
 .badge-domain {
     background-color: #e3f2fd;
@@ -39,6 +43,13 @@
     font-size: 0.8em;
     margin-right: 0.5rem;
 }
+.email-text {
+    font-size: 0.75em;
+}
+.license-number {
+    font-size: 0.75em;
+    display: inline-block;
+}
 </style>
 {% endblock %}
 
@@ -56,7 +67,7 @@
             <thead>
                 <tr>
                     <th>Photo</th>
-                    <th>Informations Principales</th>
+                    <th>Informations</th>
                     <th>Coordonnées</th>
                     <th>Domaines d'expertise</th>
                     <th>Certifications</th>
@@ -76,7 +87,7 @@
                     <td>
                         <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
                         <small class="text-muted">{{ member.role }}</small><br>
-                        <small class="text-primary">{{ member.license_number }}</small>
+                        <small class="text-primary license-number">{{ member.license_number }}</small>
                     </td>
                     <td>
                         <div data-bs-toggle="tooltip" title="Téléphone">
@@ -85,7 +96,7 @@
                         </div>
                         <div data-bs-toggle="tooltip" title="Email">
                             <i class="fas fa-envelope info-icon"></i>
-                            <a href="mailto:{{ member.email }}" class="text-decoration-none">{{ member.email }}</a>
+                            <a href="mailto:{{ member.email }}" class="text-decoration-none email-text">{{ member.email }}</a>
                         </div>
                         <div data-bs-toggle="tooltip" title="Région">
                             <i class="fas fa-map-marker-alt info-icon"></i>{{ member.region }}
