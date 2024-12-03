@@ -1,33 +1,18 @@
 import os
-from flask import Flask, render_template, flash, redirect, url_for, request
-from werkzeug.utils import secure_filename
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+from datetime import datetime
 from werkzeug.security import generate_password_hash
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'images', 'members')
 
-# Configuration
-app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "a secret key"
-db_url = os.environ.get("DATABASE_URL")
-if db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://", 1)
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,
-    "pool_size": 5,
-    "max_overflow": 10,
-    "echo": False,
-}
-
-# Initialize extensions
-db.init_app(app)
+db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -37,10 +22,9 @@ from models import User, Member, Page, News
 from forms import LoginForm, ContactForm, MemberForm, PageForm
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-# Routes
 @app.route('/')
 def home():
     news = News.query.order_by(News.date_posted.desc()).limit(3).all()
@@ -177,29 +161,57 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route('/admin')
+@app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
-    return render_template('admin/dashboard.html')
+    total_members = Member.query.count()
+    active_members = Member.query.filter_by(active=True).count()
+    total_pages = Page.query.count()
+    total_news = News.query.count()
+    
+    # Récupérer les derniers membres ajoutés
+    recent_members = Member.query.order_by(Member.id.desc()).limit(5).all()
+    
+    return render_template('admin/dashboard.html',
+                         total_members=total_members,
+                         active_members=active_members,
+                         total_pages=total_pages,
+                         total_news=total_news,
+                         recent_members=recent_members)
 
 @app.route('/admin/members')
 @login_required
 def admin_members():
     members = Member.query.all()
-    return render_template('admin/members.html', members=members, form=MemberForm())
+    form = MemberForm()
+    return render_template('admin/members.html', members=members, form=form)
 
-@app.route('/admin/members/<int:id>')
+@app.route('/admin/members/add', methods=['POST'])
 @login_required
-def admin_member_details(id):
-    member = Member.query.get_or_404(id)
-    return render_template('admin/member_details.html', member=member)
+def admin_add_member():
+    form = MemberForm()
+    if form.validate_on_submit():
+        member = Member()
+        form.populate_obj(member)
+        
+        # Gestion de la photo
+        if form.photo.data:
+            filename = secure_filename(form.photo.data.filename)
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            form.photo.data.save(photo_path)
+            member.photo_url = filename
+            
+        db.session.add(member)
+        db.session.commit()
+        flash('Nouveau membre ajouté avec succès.', 'success')
+        return redirect(url_for('admin_members'))
+        
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{getattr(form, field).label.text}: {error}', 'error')
+    return redirect(url_for('admin_members'))
 
-@app.route('/admin/content')
-@login_required
-def admin_content():
-    pages = Page.query.all()
-    return render_template('admin/content.html', pages=pages)
-
-@app.route('/admin/members/<int:id>/edit', methods=['GET', 'POST'])
+@app.route('/admin/members/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def admin_member_edit(id):
     member = Member.query.get_or_404(id)
@@ -211,7 +223,7 @@ def admin_member_edit(id):
         # Gestion de la photo
         if form.photo.data:
             filename = secure_filename(form.photo.data.filename)
-            photo_path = os.path.join('static', 'images', 'members', filename)
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             form.photo.data.save(photo_path)
             member.photo_url = filename
             
@@ -220,6 +232,14 @@ def admin_member_edit(id):
         return redirect(url_for('admin_members'))
         
     return render_template('admin/member_edit.html', form=form, member=member)
+
+@app.route('/admin/content')
+@login_required
+def admin_content():
+    pages = Page.query.all()
+    news = News.query.order_by(News.date_posted.desc()).all()
+    form = PageForm()
+    return render_template('admin/content.html', pages=pages, news=news, form=form)
 
 # Initialize database
 with app.app_context():
