@@ -51,6 +51,9 @@
     display: inline-block;
     white-space: nowrap;
 }
+.text-muted.d-inline {
+    display: inline-block !important;
+}
 </style>
 {% endblock %}
 
@@ -86,8 +89,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        <strong>{{ member.first_name }} {{ member.last_name }}</strong><br>
-                        <small class="text-muted">{{ member.role }}</small><br>
+                        <strong>{{ member.first_name }} {{ member.last_name }}</strong> -
+                        <small class="text-muted d-inline">{{ member.role }}</small><br>
                         <small class="text-primary license-number">{{ member.license_number }}</small>
                     </td>
                     <td>
