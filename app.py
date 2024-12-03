@@ -120,13 +120,29 @@ def directory():
     
     if search:
         query = query.filter(
-            (Member.first_name.ilike(f'%{search}%')) |
-            (Member.last_name.ilike(f'%{search}%'))
+            db.or_(
+                Member.first_name.ilike(f'%{search}%'),
+                Member.last_name.ilike(f'%{search}%'),
+                Member.agency_name.ilike(f'%{search}%'),
+                Member.specialization.ilike(f'%{search}%')
+            )
         )
     if region:
         query = query.filter_by(region=region)
         
     members = query.all()
+    
+    # Convert domains and certifications from string to list
+    for member in members:
+        if member.domains:
+            member.domains = member.domains.split(',')
+        else:
+            member.domains = []
+            
+        if member.certifications:
+            member.certifications = member.certifications.split(',')
+        else:
+            member.certifications = []
     return render_template('directory.html', members=members)
 
 @app.route('/contact', methods=['GET', 'POST'])
