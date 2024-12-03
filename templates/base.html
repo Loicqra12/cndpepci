@@ -16,26 +16,68 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">À propos</a>
+                        <a class="nav-link" href="{{ url_for('home') }}">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('president') }}">Le Président</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            La CNDPEPCI
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('about') }}">À propos</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('president') }}">Le Président</a></li>
+                            <li><a class="dropdown-item" href="#">Notre équipe</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Profession
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Métier de détective</a></li>
+                            <li><a class="dropdown-item" href="#">Réglementation</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('activities') }}">Activités</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('deontology') }}">Déontologie</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('activities') }}">Activités</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Relation Client
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Services</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}">Contact</a></li>
+                            <li><a class="dropdown-item" href="#">FAQ</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Formation et Certification
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Programmes</a></li>
+                            <li><a class="dropdown-item" href="#">Certification</a></li>
+                            <li><a class="dropdown-item" href="#">Calendrier</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Presse et Actualités
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Actualités</a></li>
+                            <li><a class="dropdown-item" href="#">Communiqués</a></li>
+                            <li><a class="dropdown-item" href="#">Médias</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('directory') }}">Annuaire</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                        <a class="nav-link" href="{{ url_for('directory') }}">Annuaire CNDPEPCI</a>
                     </li>
                 </ul>
+                <a href="{{ url_for('contact') }}" class="btn btn-primary">Adhérer à la Chambre</a>
             </div>
         </div>
     </nav>
