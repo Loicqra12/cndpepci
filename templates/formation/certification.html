@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Certification{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Certification professionnelle">
+            <h1 class="mt-4">Certification Professionnelle</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Processus de certification</h2>
+                <p class="lead">La certification CNDPEPCI est la référence pour les détectives privés en Côte d'Ivoire.</p>
+                
+                <div class="mb-4">
+                    <h3>Étapes de certification</h3>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <ol>
+                                <li>Formation initiale complète</li>
+                                <li>Examen théorique</li>
+                                <li>Évaluation pratique</li>
+                                <li>Validation du dossier</li>
+                                <li>Attribution de la certification</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Niveaux de certification</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Niveau 1 - Détective Junior</h5>
+                                    <p>Pour les nouveaux professionnels</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Niveau 2 - Détective Senior</h5>
+                                    <p>Pour les professionnels expérimentés</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Prochaines sessions</h4>
+                    <p>Consultez le calendrier des examens.</p>
+                    <a href="{{ url_for('formation_calendrier') }}" class="btn btn-primary">Voir le calendrier</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Questions ?</h4>
+                    <p>Contactez-nous pour plus d'informations.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Nous contacter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

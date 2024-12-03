@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Actualités{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1>Actualités</h1>
+            <p class="lead">Suivez l'actualité de la CNDPEPCI et du secteur de l'investigation privée.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            {% for article in articles %}
+            <div class="card mb-4">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" class="card-img-top" alt="{{ article.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title h4">{{ article.title }}</h2>
+                    <p class="text-muted">Publié le {{ article.date_posted.strftime('%d/%m/%Y') }}</p>
+                    <p class="card-text">{{ article.content|truncate(200) }}</p>
+                    <a href="#" class="btn btn-primary">Lire la suite</a>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Précédent</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Archives</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Décembre 2024</a></li>
+                        <li><a href="#">Novembre 2024</a></li>
+                        <li><a href="#">Octobre 2024</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Catégories</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Événements</a></li>
+                        <li><a href="#">Formations</a></li>
+                        <li><a href="#">Réglementation</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

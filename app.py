@@ -50,6 +50,52 @@ def about():
     page = Page.query.filter_by(slug='about').first()
     return render_template('about.html', page=page)
 
+@app.route('/profession/metier')
+def profession_metier():
+    return render_template('profession/metier.html')
+
+@app.route('/profession/reglementation')
+def profession_reglementation():
+    return render_template('profession/reglementation.html')
+
+@app.route('/client/services')
+def client_services():
+    return render_template('client/services.html')
+
+@app.route('/client/faq')
+def client_faq():
+    return render_template('client/faq.html')
+
+@app.route('/formation/programmes')
+def formation_programmes():
+    return render_template('formation/programmes.html')
+
+@app.route('/formation/certification')
+def formation_certification():
+    return render_template('formation/certification.html')
+
+@app.route('/formation/calendrier')
+def formation_calendrier():
+    return render_template('formation/calendrier.html')
+
+@app.route('/presse/actualites')
+def presse_actualites():
+    articles = News.query.order_by(News.date_posted.desc()).all()
+    return render_template('presse/actualites.html', articles=articles)
+
+@app.route('/presse/communiques')
+def presse_communiques():
+    communiques = News.query.filter_by(type='communique').order_by(News.date_posted.desc()).all()
+    return render_template('presse/communiques.html', communiques=communiques)
+
+@app.route('/presse/medias')
+def presse_medias():
+    return render_template('presse/medias.html')
+
+@app.route('/equipe')
+def equipe():
+    return render_template('equipe.html')
+
 @app.route('/president')
 def president():
     page = Page.query.filter_by(slug='president').first()

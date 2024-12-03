@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Nos Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Professional services">
+            <h1 class="mt-4">Nos Services</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Services proposés</h2>
+                <p class="lead">La CNDPEPCI encadre une large gamme de services d'investigation professionnelle.</p>
+                
+                <div class="mb-4">
+                    <h3>Pour les particuliers</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Recherches familiales</h5>
+                                    <p>Recherche de personnes disparues, enquêtes familiales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Surveillance</h5>
+                                    <p>Filatures et surveillances discrètes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Pour les entreprises</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Enquêtes commerciales</h5>
+                                    <p>Concurrence déloyale, protection des actifs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Due diligence</h5>
+                                    <p>Vérifications préalables aux transactions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Contact rapide</h4>
+                    <p>Besoin d'un service ? Contactez un détective certifié.</p>
+                    <a href="{{ url_for('directory') }}" class="btn btn-primary">Consulter l'annuaire</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Questions fréquentes</h4>
+                    <p>Consultez notre FAQ pour plus d'informations.</p>
+                    <a href="{{ url_for('client_faq') }}" class="btn btn-primary">Voir la FAQ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

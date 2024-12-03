@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Calendrier des Formations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1>Calendrier des Formations</h1>
+            <p class="lead">Retrouvez toutes les dates de nos formations et examens.</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Sessions à venir</h2>
+                
+                <div class="mb-4">
+                    <h3>Formation initiale</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Programme</th>
+                                    <th>Durée</th>
+                                    <th>Places</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15 Jan 2025</td>
+                                    <td>Formation de base</td>
+                                    <td>6 mois</td>
+                                    <td>20</td>
+                                </tr>
+                                <tr>
+                                    <td>1 Mar 2025</td>
+                                    <td>Formation spécialisée</td>
+                                    <td>3 mois</td>
+                                    <td>15</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Examens de certification</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Niveau</th>
+                                    <th>Lieu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>20 Feb 2025</td>
+                                    <td>Examen théorique</td>
+                                    <td>Niveau 1</td>
+                                    <td>Abidjan</td>
+                                </tr>
+                                <tr>
+                                    <td>21 Feb 2025</td>
+                                    <td>Évaluation pratique</td>
+                                    <td>Niveau 1</td>
+                                    <td>Abidjan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Inscription</h4>
+                    <p>Pour vous inscrire à une formation ou un examen, contactez-nous.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">S'inscrire</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Plus d'informations</h4>
+                    <p>Découvrez nos programmes de formation.</p>
+                    <a href="{{ url_for('formation_programmes') }}" class="btn btn-primary">Voir les programmes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

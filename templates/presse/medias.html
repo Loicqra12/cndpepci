@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Médiathèque{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1>Médiathèque</h1>
+            <p class="lead">Retrouvez nos ressources médias : photos, vidéos et documents.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Photos -->
+            <section class="mb-5">
+                <h2>Galerie Photos</h2>
+                <div class="row">
+                    {% for photo in photos %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{ photo.url }}" class="card-img-top" alt="{{ photo.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ photo.title }}</h5>
+                                <p class="text-muted">{{ photo.date.strftime('%d/%m/%Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Vidéos -->
+            <section class="mb-5">
+                <h2>Vidéos</h2>
+                <div class="row">
+                    {% for video in videos %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="ratio ratio-16x9">
+                                <iframe src="{{ video.url }}" title="{{ video.title }}" allowfullscreen></iframe>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ video.title }}</h5>
+                                <p class="text-muted">{{ video.date.strftime('%d/%m/%Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Téléchargements</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i data-feather="download" class="me-2"></i>
+                            <a href="#">Dossier de presse (PDF)</a>
+                        </li>
+                        <li class="mb-2">
+                            <i data-feather="download" class="me-2"></i>
+                            <a href="#">Logo CNDPEPCI (ZIP)</a>
+                        </li>
+                        <li class="mb-2">
+                            <i data-feather="download" class="me-2"></i>
+                            <a href="#">Charte graphique (PDF)</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Contact Presse</h4>
+                    <p>Pour toute demande de ressources médias.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Contacter le service presse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

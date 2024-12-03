@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Métier de Détective{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Detective work">
+            <h1 class="mt-4">Le Métier de Détective Privé</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Un métier passionnant et exigeant</h2>
+                <p class="lead">Le détective privé est un professionnel de l'investigation qui met ses compétences au service des particuliers et des entreprises.</p>
+                
+                <div class="mb-4">
+                    <h3>Missions principales</h3>
+                    <ul>
+                        <li>Recherches de personnes</li>
+                        <li>Enquêtes civiles et commerciales</li>
+                        <li>Surveillance et filature</li>
+                        <li>Investigations numériques</li>
+                    </ul>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Compétences requises</h3>
+                    <ul>
+                        <li>Discrétion et professionnalisme</li>
+                        <li>Esprit d'analyse et de synthèse</li>
+                        <li>Maîtrise des techniques d'investigation</li>
+                        <li>Connaissances juridiques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Formation</h4>
+                    <p>Découvrez nos programmes de formation pour devenir détective privé.</p>
+                    <a href="{{ url_for('formation_programmes') }}" class="btn btn-primary">En savoir plus</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Rejoignez la CNDPEPCI</h4>
+                    <p>Vous êtes détective privé ? Rejoignez notre chambre professionnelle.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Nous contacter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

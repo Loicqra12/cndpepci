@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1>Questions Fréquentes</h1>
+            <p class="lead">Retrouvez les réponses aux questions les plus fréquemment posées.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Comment choisir un détective privé ?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Pour choisir un détective privé, assurez-vous qu'il est membre de la CNDPEPCI et vérifie
+                            les critères suivants :</p>
+                            <ul>
+                                <li>Certification professionnelle</li>
+                                <li>Adhésion à notre code de déontologie</li>
+                                <li>Expérience dans votre type de cas</li>
+                                <li>Transparence des tarifs et méthodes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Quels sont les tarifs pratiqués ?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Les tarifs varient selon la nature et la complexité de la mission. Chaque détective établit
+                            ses propres tarifs, mais tous s'engagent à :</p>
+                            <ul>
+                                <li>Fournir un devis détaillé</li>
+                                <li>Expliquer clairement les coûts</li>
+                                <li>Respecter la grille tarifaire recommandée</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more FAQ items as needed -->
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Question spécifique ?</h4>
+                    <p>N'hésitez pas à nous contacter pour toute question particulière.</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Nous contacter</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Annuaire des membres</h4>
+                    <p>Trouvez un détective privé certifié près de chez vous.</p>
+                    <a href="{{ url_for('directory') }}" class="btn btn-primary">Consulter l'annuaire</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

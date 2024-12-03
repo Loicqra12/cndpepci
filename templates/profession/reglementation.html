@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Réglementation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Legal documents">
+            <h1 class="mt-4">Réglementation de la Profession</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Cadre légal</h2>
+                <p class="lead">L'exercice de la profession de détective privé en Côte d'Ivoire est encadré par des textes législatifs et réglementaires stricts.</p>
+                
+                <div class="mb-4">
+                    <h3>Conditions d'exercice</h3>
+                    <ul>
+                        <li>Obtention d'une licence professionnelle</li>
+                        <li>Respect du code de déontologie</li>
+                        <li>Formation continue obligatoire</li>
+                        <li>Assurance professionnelle</li>
+                    </ul>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Obligations légales</h3>
+                    <ul>
+                        <li>Protection des données personnelles</li>
+                        <li>Secret professionnel</li>
+                        <li>Respect de la vie privée</li>
+                        <li>Transparence des méthodes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Documents utiles</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i data-feather="file-text" class="me-2"></i>
+                            Code de déontologie
+                        </li>
+                        <li class="mb-2">
+                            <i data-feather="file-text" class="me-2"></i>
+                            Textes de loi
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Questions ?</h4>
+                    <p>Consultez notre FAQ ou contactez-nous pour plus d'informations.</p>
+                    <a href="{{ url_for('client_faq') }}" class="btn btn-primary">Voir la FAQ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

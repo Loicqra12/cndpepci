@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Notre Équipe{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1>Notre Équipe</h1>
+            <p class="lead">Découvrez les membres de l'équipe dirigeante de la CNDPEPCI.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Bureau Exécutif -->
+        <div class="col-md-12 mb-5">
+            <h2>Bureau Exécutif</h2>
+            <div class="row">
+                {% for member in bureau %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if member.photo %}
+                        <img src="{{ member.photo }}" class="card-img-top" alt="{{ member.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ member.name }}</h5>
+                            <p class="card-text text-muted">{{ member.role }}</p>
+                            <p class="card-text">{{ member.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Commissions -->
+        <div class="col-md-12 mb-5">
+            <h2>Commissions</h2>
+            <div class="row">
+                {% for commission in commissions %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ commission.name }}</h5>
+                            <p class="card-text text-muted">Président(e) : {{ commission.president }}</p>
+                            <p class="card-text">{{ commission.description }}</p>
+                            <ul class="list-unstyled">
+                                {% for member in commission.members %}
+                                <li>{{ member }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Programmes de Formation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Formation professionnelle">
+            <h1 class="mt-4">Programmes de Formation</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <div class="content">
+                <h2>Nos formations professionnelles</h2>
+                <p class="lead">La CNDPEPCI propose des programmes de formation adaptés aux besoins du secteur.</p>
+                
+                <div class="mb-4">
+                    <h3>Formation initiale</h3>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5>Programme de base</h5>
+                            <ul>
+                                <li>Techniques d'investigation</li>
+                                <li>Cadre juridique</li>
+                                <li>Éthique professionnelle</li>
+                                <li>Outils et méthodes</li>
+                            </ul>
+                            <p><strong>Durée:</strong> 6 mois</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3>Formations spécialisées</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Investigation numérique</h5>
+                                    <p>Techniques d'investigation en environnement digital</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Surveillance professionnelle</h5>
+                                    <p>Techniques avancées de filature et surveillance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Calendrier</h4>
+                    <p>Consultez les dates des prochaines sessions.</p>
+                    <a href="{{ url_for('formation_calendrier') }}" class="btn btn-primary">Voir le calendrier</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Certification</h4>
+                    <p>Découvrez notre processus de certification.</p>
+                    <a href="{{ url_for('formation_certification') }}" class="btn btn-primary">En savoir plus</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
