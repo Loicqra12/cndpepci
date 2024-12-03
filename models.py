@@ -29,6 +29,13 @@ class Member(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     active = db.Column(db.Boolean, default=True)
+    agency_name = db.Column(db.String(200))
+    role = db.Column(db.String(100))
+    certifications = db.Column(db.Text)
+    domains = db.Column(db.Text)
+    experience_years = db.Column(db.Integer)
+    photo_url = db.Column(db.String(200))
+    license_number = db.Column(db.String(50))
 
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
