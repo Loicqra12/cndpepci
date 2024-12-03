@@ -36,6 +36,7 @@ class Member(db.Model):
     experience_years = db.Column(db.Integer)
     photo_url = db.Column(db.String(200))
     license_number = db.Column(db.String(50))
+    website = db.Column(db.String(200))
 
 class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
