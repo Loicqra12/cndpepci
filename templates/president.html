@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row mb-5">
         <div class="col-md-12">
-            <img src="https://images.unsplash.com/photo-1496368077930-c1e31b4e5b44" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Professional office">
+            <h1 class="mb-4">Le Président de la CNDPEPCI</h1>
         </div>
     </div>
 
@@ -14,22 +14,31 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body text-center">
-                    <img src="https://i.pravatar.cc/300" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;" alt="Président de la CNDPEPCI">
-                    <h4 class="card-title">Le Président</h4>
-                    <p class="card-text text-muted">CNDPEPCI</p>
+                    <img src="{{ url_for('static', filename='images/1697852218404.jpg') }}" class="img-fluid rounded mb-3" style="max-width: 100%; height: auto;" alt="Président de la CNDPEPCI">
+                    <h4 class="card-title">M. Le Président</h4>
+                    <p class="card-text text-muted">Président de la CNDPEPCI</p>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-            <h1 class="mb-4">Message du Président</h1>
-            {% if page %}
-                {{ page.content|safe }}
-            {% else %}
-                <p class="lead">Chers visiteurs, confrères et partenaires,</p>
-                <p>En tant que Président de la Chambre Nationale de Détective Privé et Enquêteur Professionnel de Côte d'Ivoire, je suis honoré de vous accueillir sur notre site officiel.</p>
-                <p>Notre engagement est de promouvoir l'excellence dans notre profession, tout en garantissant le respect des normes éthiques les plus strictes. La CNDPEPCI œuvre quotidiennement pour structurer et valoriser le métier de détective privé en Côte d'Ivoire.</p>
-                <p>Nous sommes déterminés à faire de notre profession une référence en matière d'investigation privée, au service des particuliers et des entreprises.</p>
-            {% endif %}
+            <div class="content">
+                <h2 class="mb-4">Message du Président</h2>
+                {% if page %}
+                    {{ page.content|safe }}
+                {% else %}
+                    <p class="lead">Chers membres, partenaires et visiteurs,</p>
+                    <p>En ma qualité de Président de la Chambre Nationale de Détective Privé et Enquêteur Professionnel de Côte d'Ivoire (CNDPEPCI), je suis honoré de vous accueillir sur notre plateforme officielle.</p>
+                    <p>Notre mission est de structurer et de professionnaliser le métier de détective privé en Côte d'Ivoire. Nous œuvrons quotidiennement pour garantir l'excellence et l'éthique dans notre profession, tout en assurant la protection des intérêts de nos membres et de leurs clients.</p>
+                    <p>La CNDPEPCI s'engage à :</p>
+                    <ul>
+                        <li>Promouvoir les meilleures pratiques professionnelles</li>
+                        <li>Assurer la formation continue de nos membres</li>
+                        <li>Maintenir des standards éthiques élevés</li>
+                        <li>Représenter la profession auprès des autorités</li>
+                    </ul>
+                    <p>Ensemble, construisons une profession respectée et reconnue en Côte d'Ivoire.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -37,19 +46,19 @@
         <div class="col-md-12">
             <div class="card bg-light">
                 <div class="card-body">
-                    <h3 class="card-title mb-4">Nos engagements</h3>
+                    <h3 class="card-title mb-4">Vision et Objectifs</h3>
                     <div class="row">
                         <div class="col-md-4">
-                            <h5>Professionnalisme</h5>
-                            <p>Garantir des services d'investigation de haute qualité.</p>
+                            <h5>Excellence</h5>
+                            <p>Promouvoir les plus hauts standards de qualité dans nos services.</p>
                         </div>
                         <div class="col-md-4">
-                            <h5>Éthique</h5>
-                            <p>Respecter une déontologie stricte dans toutes nos actions.</p>
+                            <h5>Intégrité</h5>
+                            <p>Maintenir une éthique professionnelle irréprochable.</p>
                         </div>
                         <div class="col-md-4">
                             <h5>Innovation</h5>
-                            <p>Adopter les meilleures pratiques et technologies.</p>
+                            <p>Adopter les meilleures pratiques et technologies du secteur.</p>
                         </div>
                     </div>
                 </div>
