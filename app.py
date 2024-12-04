@@ -236,10 +236,10 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/admin')
-@app.route('/admin/dashboard')
+@app.route('/dashboard')
+@app.route('/dashboard/home')
 @login_required
-def admin_dashboard():
+def dashboard_home():
     total_members = Member.query.count()
     active_members = Member.query.filter_by(active=True).count()
     total_pages = Page.query.count()
@@ -255,16 +255,16 @@ def admin_dashboard():
                          total_news=total_news,
                          recent_members=recent_members)
 
-@app.route('/admin/members')
+@app.route('/dashboard/members')
 @login_required
-def admin_members():
+def dashboard_members():
     members = Member.query.all()
     form = MemberForm()
     return render_template('admin/members.html', members=members, form=form)
 
-@app.route('/admin/members/add', methods=['POST'])
+@app.route('/dashboard/members/add', methods=['POST'])
 @login_required
-def admin_add_member():
+def dashboard_add_member():
     form = MemberForm()
     if form.validate_on_submit():
         member = Member()
@@ -280,16 +280,16 @@ def admin_add_member():
         db.session.add(member)
         db.session.commit()
         flash('Nouveau membre ajouté avec succès.', 'success')
-        return redirect(url_for('admin_members'))
+        return redirect(url_for('dashboard_members'))
         
     for field, errors in form.errors.items():
         for error in errors:
             flash(f'{getattr(form, field).label.text}: {error}', 'error')
-    return redirect(url_for('admin_members'))
+    return redirect(url_for('dashboard_members'))
 
-@app.route('/admin/members/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/dashboard/members/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def admin_member_edit(id):
+def dashboard_member_edit(id):
     member = Member.query.get_or_404(id)
     form = MemberForm(obj=member)
     
@@ -305,7 +305,7 @@ def admin_member_edit(id):
             
         db.session.commit()
         flash('Membre mis à jour avec succès.', 'success')
-        return redirect(url_for('admin_members'))
+        return redirect(url_for('dashboard_members'))
         
     return render_template('admin/member_edit.html', form=form, member=member)
 
