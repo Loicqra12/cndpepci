@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Administration - Détails du membre{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                            <i data-feather="home"></i>
+                            Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_members') }}">
+                            <i data-feather="users"></i>
+                            Membres
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_content') }}">
+                            <i data-feather="file-text"></i>
+                            Contenu
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Détails du membre</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{{ url_for('admin_members') }}" class="btn btn-secondary me-2">
+                        <i data-feather="arrow-left"></i> Retour
+                    </a>
+                    <a href="{{ url_for('admin_member_edit', id=member.id) }}" class="btn btn-primary">
+                        <i data-feather="edit"></i> Modifier
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            {% if member.photo_url %}
+                            <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" 
+                                 class="img-fluid rounded-circle mb-3" style="max-width: 200px;">
+                            {% else %}
+                            <img src="https://i.pravatar.cc/200?img={{ member.id }}" 
+                                 class="img-fluid rounded-circle mb-3">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h3>{{ member.first_name }} {{ member.last_name }}</h3>
+                            <p class="text-muted">{{ member.role }}</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Informations de contact</h5>
+                                    <p><i data-feather="mail" class="feather-small"></i> {{ member.email }}</p>
+                                    <p><i data-feather="phone" class="feather-small"></i> {{ member.phone }}</p>
+                                    <p><i data-feather="map-pin" class="feather-small"></i> {{ member.region }}</p>
+                                    <p><i data-feather="home" class="feather-small"></i> {{ member.address }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Informations professionnelles</h5>
+                                    <p><strong>Agence:</strong> {{ member.agency_name }}</p>
+                                    <p><strong>Licence:</strong> {{ member.license_number }}</p>
+                                    <p><strong>Expérience:</strong> {{ member.experience_years }} ans</p>
+                                    {% if member.website %}
+                                    <p><strong>Site web:</strong> <a href="{{ member.website }}" target="_blank">{{ member.website }}</a></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                            <h5>Domaines d'expertise</h5>
+                            {% if member.domains %}
+                            <div class="mb-3">
+                                {% for domain in member.domains.split(',') %}
+                                <span class="badge bg-primary me-1">{{ domain.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if member.certifications %}
+                            <h5>Certifications</h5>
+                            <div class="mb-3">
+                                {% for cert in member.certifications.split(',') %}
+                                <span class="badge bg-success me-1">{{ cert.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if member.bio %}
+                            <h5>Biographie</h5>
+                            <p>{{ member.bio }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    feather.replace();
+});
+</script>
+{% endblock %}

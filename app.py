@@ -16,6 +16,31 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+import os
+import shutil
+
+def add_member_with_photo(member_data, photo_filename, source_photo_path):
+    """
+    Ajoute un nouveau membre avec sa photo
+    """
+    # Créer le dossier des photos si nécessaire
+    upload_folder = os.path.join('static', 'images', 'members')
+    os.makedirs(upload_folder, exist_ok=True)
+    
+    # Copier la photo
+    destination = os.path.join(upload_folder, photo_filename)
+    shutil.copy2(source_photo_path, destination)
+    
+    # Créer le membre
+    member = Member(**member_data)
+    member.photo_url = photo_filename
+    member.active = True
+    
+    # Sauvegarder dans la base de données
+    db.session.add(member)
+    db.session.commit()
+    
+    return member
 
 # Import models after db initialization
 from models import User, Member, Page, News
@@ -232,6 +257,12 @@ def admin_member_edit(id):
         return redirect(url_for('admin_members'))
         
     return render_template('admin/member_edit.html', form=form, member=member)
+
+@app.route('/admin/members/<int:id>')
+@login_required
+def admin_member_details(id):
+    member = Member.query.get_or_404(id)
+    return render_template('admin/member_details.html', member=member)
 
 @app.route('/admin/content')
 @login_required
