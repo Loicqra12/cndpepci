@@ -89,7 +89,7 @@
                 <tr>
                     <td>
                         {% if member.photo_url %}
-                        <img src="{{ member.photo_url }}" class="member-photo" alt="{{ member.first_name }}">
+                        <img src="{{ url_for('static', filename=member.photo_url) }}" class="member-photo" alt="{{ member.first_name }}">
                         {% else %}
                         <img src="https://i.pravatar.cc/80?img={{ member.id }}" class="member-photo" alt="{{ member.first_name }}">
                         {% endif %}

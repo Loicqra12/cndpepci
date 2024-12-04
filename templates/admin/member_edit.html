@@ -71,7 +71,7 @@
                                 <h4>Photo de profil</h4>
                                 <div class="mb-3">
                                     {% if member.photo_url %}
-                                    <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" 
+                                    <img src="{{ url_for('static', filename=member.photo_url) }}" 
                                          class="img-thumbnail mb-2" style="max-width: 200px;">
                                     {% endif %}
                                     {{ form.photo.label(class="form-label") }}

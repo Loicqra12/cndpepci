@@ -98,7 +98,7 @@
                         <tr>
                             <td>
                                 {% if member.photo_url %}
-                                <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" class="rounded-circle" alt="{{ member.first_name }}" style="width: 40px; height: 40px; object-fit: cover;">
+                                <img src="{{ url_for('static', filename=member.photo_url) }}" class="rounded-circle" alt="{{ member.first_name }}" style="width: 40px; height: 40px; object-fit: cover;">
                                 {% else %}
                                 <img src="https://i.pravatar.cc/40?img={{ member.id }}" class="rounded-circle" alt="{{ member.first_name }}">
                                 {% endif %}
