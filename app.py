@@ -17,6 +17,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 import os
+from blueprints.auth import bp as auth_bp
+from blueprints.forum import bp as forum_bp
+
+app.register_blueprint(auth_bp)
+app.register_blueprint(forum_bp)
 import shutil
 
 def add_member_with_photo(member_data, photo_filename, source_photo_path):
