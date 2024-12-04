@@ -177,10 +177,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
+        if user is None:
+            flash('Nom d\'utilisateur inconnu', 'error')
+        elif not user.check_password(form.password.data):
+            flash('Mot de passe incorrect', 'error')
+        else:
             login_user(user)
+            flash('Connexion réussie!', 'success')
             return redirect(url_for('admin_dashboard'))
-        flash('Invalid username or password', 'error')
     return render_template('admin/login.html', form=form)
 
 @app.route('/admin/logout')
