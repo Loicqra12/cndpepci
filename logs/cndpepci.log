@@ -1,1 +1,2 @@
 2024-12-04 12:38:28,288 INFO: CNDPEPCI startup [in /home/runner/CNDPEPCIWebsite/app.py:218]
+2024-12-04 12:43:27,370 ERROR: Page not found: http://bdc9f62e-74b8-46a5-8023-34aaa304fce1-00-1i5osjdloctrr.picard.replit.dev/favicon.ico [in /home/runner/CNDPEPCIWebsite/app.py:195]
