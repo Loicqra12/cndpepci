@@ -189,6 +189,33 @@ def contact():
 from blueprints.admin import admin
 app.register_blueprint(admin)
 
+# Error handlers
+@app.errorhandler(404)
+def page_not_found(error):
+    app.logger.error(f'Page not found: {request.url}')
+    return render_template('errors/404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    app.logger.error(f'Server Error: {error}')
+    return render_template('errors/500.html'), 500
+
+# Configure logging
+if not app.debug:
+    import logging
+    from logging.handlers import RotatingFileHandler
+    import os
+    
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/cndpepci.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('CNDPEPCI startup')
 # Initialize database
 with app.app_context():
     db.create_all()
@@ -199,3 +226,5 @@ with app.app_context():
         admin.set_password('admin')  # Change this in production!
         db.session.add(admin)
         db.session.commit()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
