@@ -41,10 +41,24 @@ class MemberForm(FlaskForm):
     website = StringField('Site web')
     latitude = FloatField('Latitude')
     longitude = FloatField('Longitude')
+    active = BooleanField('Actif')
 
 class PageForm(FlaskForm):
     title = StringField('Titre', validators=[DataRequired()])
+    slug = StringField('Slug', validators=[DataRequired()])
     content = TextAreaField('Contenu', validators=[DataRequired()])
+
+class NewsForm(FlaskForm):
+    title = StringField('Titre', validators=[DataRequired()])
+    content = TextAreaField('Contenu', validators=[DataRequired()])
+    type = SelectField('Type', choices=[
+        ('article', 'Article'),
+        ('communique', 'Communiqué')
+    ], validators=[DataRequired()])
+    image = FileField('Image', validators=[
+        FileAllowed(['jpg', 'jpeg', 'png'], 'Images uniquement!')
+    ])
+
 class RegistrationForm(FlaskForm):
     username = StringField('Nom d\'utilisateur', validators=[DataRequired(), Length(min=3, max=64)])
     email = StringField('Email', validators=[DataRequired(), Email()])

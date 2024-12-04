@@ -60,6 +60,20 @@
 .text-muted.d-inline {
     display: inline-block !important;
 }
+.domain-tag {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    font-size: 0.8em;
+    margin-right: 0.25rem;
+    padding: 0.35em 0.65em;
+}
+.certification-tag {
+    background-color: #e7f5ee;
+    color: #28a745;
+    font-size: 0.8em;
+    margin-right: 0.25rem;
+    padding: 0.35em 0.65em;
+}
 </style>
 {% endblock %}
 
@@ -116,14 +130,26 @@
                         </div>
                     </td>
                     <td>
-                        {% for domain in member.domains %}
-                        <span class="badge badge-domain">{{ domain }}</span>
-                        {% endfor %}
+                        <div class="member-domains">
+                            <h6>Domaines d'expertise:</h6>
+                            <div class="domains-list">
+                                {% for domain in member.domains_list %}
+                                    <span class="domain-tag">{{ domain }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        {% for cert in member.certifications %}
-                        <span class="badge badge-certification">{{ cert }}</span>
-                        {% endfor %}
+                        {% if member.certifications_list %}
+                        <div class="member-certifications">
+                            <h6>Certifications:</h6>
+                            <div class="certifications-list">
+                                {% for cert in member.certifications_list %}
+                                    <span class="certification-tag">{{ cert }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </td>
                     <td>
                         <i class="fas fa-clock info-icon"></i>

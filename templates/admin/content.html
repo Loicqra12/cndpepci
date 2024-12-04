@@ -6,42 +6,46 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div class="position-sticky pt-3">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                            <i data-feather="home"></i>
-                            Tableau de bord
+                        <a class="nav-link" href="{{ url_for('dashboard_home') }}">
+                            <i class="fas fa-home"></i> Tableau de bord
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_members') }}">
-                            <i data-feather="users"></i>
-                            Membres
+                        <a class="nav-link" href="{{ url_for('dashboard_members') }}">
+                            <i class="fas fa-users"></i> Membres
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('admin_content') }}">
-                            <i data-feather="file-text"></i>
-                            Contenu
+                        <a class="nav-link active" href="{{ url_for('dashboard_content') }}">
+                            <i class="fas fa-file-alt"></i> Contenu
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}">
-                            <i data-feather="log-out"></i>
-                            Déconnexion
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
                         </a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Gestion du Contenu</h1>
+                <h1 class="h2">Gestion du contenu</h1>
             </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
             <!-- Content Tabs -->
             <ul class="nav nav-tabs mb-4" id="contentTabs" role="tablist">
@@ -58,10 +62,9 @@
                 <div class="tab-pane fade show active" id="pages">
                     <div class="d-flex justify-content-end mb-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPageModal">
-                            <i data-feather="plus"></i> Nouvelle page
+                            <i class="fas fa-plus"></i> Ajouter une page
                         </button>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -79,11 +82,11 @@
                                     <td>{{ page.slug }}</td>
                                     <td>{{ page.last_modified.strftime('%d/%m/%Y %H:%M') }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editPageModal{{ page.id }}">
-                                            <i data-feather="edit-2"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deletePageModal{{ page.id }}">
-                                            <i data-feather="trash-2"></i>
+                                        <a href="{{ url_for('dashboard_edit_page', id=page.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePageModal{{ page.id }}">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -97,36 +100,40 @@
                 <div class="tab-pane fade" id="news">
                     <div class="d-flex justify-content-end mb-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewsModal">
-                            <i data-feather="plus"></i> Nouvelle actualité
+                            <i class="fas fa-plus"></i> Ajouter une actualité
                         </button>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Image</th>
                                     <th>Titre</th>
-                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Date de publication</th>
+                                    <th>Image</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for article in news %}
+                                {% for news_item in news %}
                                 <tr>
+                                    <td>{{ news_item.title }}</td>
+                                    <td>{{ news_item.type }}</td>
+                                    <td>{{ news_item.date_posted.strftime('%d/%m/%Y %H:%M') }}</td>
                                     <td>
-                                        {% if article.image_url %}
-                                        <img src="{{ article.image_url }}" alt="{{ article.title }}" style="height: 50px;">
+                                        {% if news_item.image_url %}
+                                        <img src="{{ url_for('static', filename='images/news/' + news_item.image_url) }}" 
+                                             alt="Image" class="img-thumbnail" style="max-width: 50px;">
+                                        {% else %}
+                                        <span class="text-muted">Aucune image</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ article.title }}</td>
-                                    <td>{{ article.date_posted.strftime('%d/%m/%Y') }}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editNewsModal{{ article.id }}">
-                                            <i data-feather="edit-2"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteNewsModal{{ article.id }}">
-                                            <i data-feather="trash-2"></i>
+                                        <a href="{{ url_for('dashboard_edit_news', id=news_item.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteNewsModal{{ news_item.id }}">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -141,28 +148,120 @@
 </div>
 
 <!-- Add Page Modal -->
-<div class="modal fade" id="addPageModal" tabindex="-1">
+<div class="modal fade" id="addPageModal" tabindex="-1" role="dialog" aria-labelledby="addPageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Nouvelle page</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title" id="addPageModalLabel">Ajouter une nouvelle page</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('admin_add_page') }}">
-                    {{ form.hidden_tag() }}
+                <form method="POST" action="{{ url_for('dashboard_add_page') }}">
+                    {{ form.csrf_token }}
                     <div class="mb-3">
                         {{ form.title.label(class="form-label") }}
                         {{ form.title(class="form-control") }}
                     </div>
                     <div class="mb-3">
-                        {{ form.content.label(class="form-label") }}
-                        {{ form.content(class="form-control", id="content-editor") }}
+                        {{ form.slug.label(class="form-label") }}
+                        {{ form.slug(class="form-control") }}
                     </div>
-                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control", rows="10") }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Add News Modal -->
+<div class="modal fade" id="addNewsModal" tabindex="-1" role="dialog" aria-labelledby="addNewsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewsModalLabel">Ajouter une actualité</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('dashboard_add_news') }}" enctype="multipart/form-data">
+                    {{ news_form.csrf_token }}
+                    <div class="mb-3">
+                        {{ news_form.title.label(class="form-label") }}
+                        {{ news_form.title(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ news_form.type.label(class="form-label") }}
+                        {{ news_form.type(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ news_form.content.label(class="form-label") }}
+                        {{ news_form.content(class="form-control", rows="10") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ news_form.image.label(class="form-label") }}
+                        {{ news_form.image(class="form-control") }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Page Modals -->
+{% for page in pages %}
+<div class="modal fade" id="deletePageModal{{ page.id }}" tabindex="-1" role="dialog" aria-labelledby="deletePageModalLabel{{ page.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePageModalLabel{{ page.id }}">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer la page "{{ page.title }}" ? Cette action est irréversible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="POST" action="{{ url_for('dashboard_delete_page', id=page.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete News Modals -->
+{% for news_item in news %}
+<div class="modal fade" id="deleteNewsModal{{ news_item.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteNewsModalLabel{{ news_item.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteNewsModalLabel{{ news_item.id }}">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer l'actualité "{{ news_item.title }}" ? Cette action est irréversible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="POST" action="{{ url_for('dashboard_delete_news', id=news_item.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

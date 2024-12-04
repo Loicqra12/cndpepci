@@ -1,178 +1,136 @@
 {% extends "base.html" %}
 
-{% block title %}Administration - Éditer un membre{% endblock %}
+{% block title %}Modifier un membre{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div class="position-sticky pt-3">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                            <i data-feather="home"></i>
-                            Tableau de bord
+                        <a class="nav-link" href="{{ url_for('dashboard_home') }}">
+                            <i class="fas fa-home"></i> Tableau de bord
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('admin_members') }}">
-                            <i data-feather="users"></i>
-                            Membres
+                        <a class="nav-link active" href="{{ url_for('dashboard_members') }}">
+                            <i class="fas fa-users"></i> Membres
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('admin_content') }}">
-                            <i data-feather="file-text"></i>
-                            Contenu
+                            <i class="fas fa-file-alt"></i> Contenu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
                         </a>
                     </li>
                 </ul>
             </div>
-        </div>
+        </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Éditer un membre</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <a href="{{ url_for('admin_members') }}" class="btn btn-secondary">
-                        <i data-feather="arrow-left"></i> Retour
-                    </a>
-                </div>
+                <h1 class="h2">Modifier un membre</h1>
+                <a href="{{ url_for('dashboard_members') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
             </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
             <div class="card">
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
-                        {{ form.hidden_tag() }}
-                        
-                        <div class="row mb-3">
+                        {{ form.csrf_token }}
+                        <div class="row">
                             <div class="col-md-6">
-                                <h4>Informations personnelles</h4>
-                                <div class="mb-3">
-                                    {{ form.first_name.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.first_name.label }}
                                     {{ form.first_name(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.last_name.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.last_name.label }}
                                     {{ form.last_name(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.email.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.email.label }}
                                     {{ form.email(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.phone.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.phone.label }}
                                     {{ form.phone(class="form-control") }}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <h4>Photo de profil</h4>
-                                <div class="mb-3">
-                                    {% if member.photo_url %}
-                                    <img src="{{ url_for('static', filename=member.photo_url) }}" 
-                                         class="img-thumbnail mb-2" style="max-width: 200px;">
-                                    {% endif %}
-                                    {{ form.photo.label(class="form-label") }}
-                                    {{ form.photo(class="form-control") }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <h4>Informations professionnelles</h4>
-                                <div class="mb-3">
-                                    {{ form.agency_name.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.agency_name.label }}
                                     {{ form.agency_name(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.role.label(class="form-label") }}
-                                    {{ form.role(class="form-control") }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form.license_number.label(class="form-label") }}
-                                    {{ form.license_number(class="form-control") }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form.experience_years.label(class="form-label") }}
-                                    {{ form.experience_years(class="form-control", type="number") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <h4>Localisation</h4>
-                                <div class="mb-3">
-                                    {{ form.region.label(class="form-label") }}
-                                    {{ form.region(class="form-select") }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form.address.label(class="form-label") }}
-                                    {{ form.address(class="form-control") }}
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        {{ form.latitude.label(class="form-label") }}
-                                        {{ form.latitude(class="form-control") }}
-                                    </div>
-                                    <div class="col-md-6">
-                                        {{ form.longitude.label(class="form-label") }}
-                                        {{ form.longitude(class="form-control") }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <h4>Expertise et Certifications</h4>
-                                <div class="mb-3">
-                                    {{ form.specialization.label(class="form-label") }}
+                                <div class="form-group">
+                                    {{ form.specialization.label }}
                                     {{ form.specialization(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.domains.label(class="form-label") }}
-                                    <small class="text-muted d-block">Séparez les domaines par des virgules</small>
-                                    {{ form.domains(class="form-control") }}
+                                <div class="form-group">
+                                    {{ form.region.label }}
+                                    {{ form.region(class="form-control") }}
                                 </div>
-                                <div class="mb-3">
-                                    {{ form.certifications.label(class="form-label") }}
-                                    <small class="text-muted d-block">Séparez les certifications par des virgules</small>
-                                    {{ form.certifications(class="form-control") }}
+                                <div class="form-group">
+                                    {{ form.photo.label }}
+                                    {% if member.photo_url %}
+                                    <div class="mb-2">
+                                        <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" 
+                                             alt="Photo actuelle" 
+                                             class="img-thumbnail" 
+                                             style="max-width: 150px;">
+                                    </div>
+                                    {% endif %}
+                                    {{ form.photo(class="form-control-file") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.domains.label }}
+                                    {{ form.domains(class="form-control", rows=4) }}
+                                    <small class="form-text text-muted">Un domaine par ligne</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <h4>Informations complémentaires</h4>
-                                <div class="mb-3">
-                                    {{ form.website.label(class="form-label") }}
-                                    {{ form.website(class="form-control") }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form.bio.label(class="form-label") }}
-                                    {{ form.bio(class="form-control", rows=4) }}
+                                <div class="form-group">
+                                    {{ form.certifications.label }}
+                                    {{ form.certifications(class="form-control", rows=4) }}
+                                    <small class="form-text text-muted">Une certification par ligne</small>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="text-end">
-                            <a href="{{ url_for('admin_members') }}" class="btn btn-secondary me-2">Annuler</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i data-feather="save"></i> Enregistrer les modifications
-                            </button>
+                        <div class="form-group">
+                            {{ form.description.label }}
+                            {{ form.description(class="form-control", rows=4) }}
                         </div>
+                        <div class="form-check mb-3">
+                            {{ form.active(class="form-check-input") }}
+                            {{ form.active.label(class="form-check-label") }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Enregistrer les modifications
+                        </button>
                     </form>
                 </div>
             </div>
         </main>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Feather icons
-    feather.replace();
-});
-</script>
 {% endblock %}

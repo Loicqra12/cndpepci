@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Annuaire des Membres CNDPEPCI</h1>
+    
+    <div class="row">
+        {% for member in members %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="text-center pt-3">
+                    {% if member.photo_url %}
+                        <img src="{{ url_for('static', filename=member.photo_path) }}" 
+                             alt="Photo de {{ member.full_name }}" 
+                             class="rounded-circle" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/default-profile.jpg') }}" 
+                             alt="Photo par défaut" 
+                             class="rounded-circle" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                    {% endif %}
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ member.first_name }} {{ member.last_name }}</h5>
+                    {% if member.role %}
+                        <p class="text-muted">{{ member.role }}</p>
+                    {% endif %}
+                    {% if member.specialization %}
+                        <p class="card-text"><strong>Spécialisation:</strong> {{ member.specialization }}</p>
+                    {% endif %}
+                    {% if member.region %}
+                        <p class="card-text"><strong>Région:</strong> {{ member.region }}</p>
+                    {% endif %}
+                    {% if member.agency_name %}
+                        <p class="card-text"><strong>Agence:</strong> {{ member.agency_name }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <div class="d-flex justify-content-center">
+                        {% if member.email %}
+                            <a href="mailto:{{ member.email }}" class="btn btn-outline-primary btn-sm mx-1">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        {% endif %}
+                        {% if member.phone %}
+                            <a href="tel:{{ member.phone }}" class="btn btn-outline-primary btn-sm mx-1">
+                                <i class="fas fa-phone"></i>
+                            </a>
+                        {% endif %}
+                        {% if member.website %}
+                            <a href="{{ member.website }}" target="_blank" class="btn btn-outline-primary btn-sm mx-1">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
