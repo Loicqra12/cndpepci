@@ -108,7 +108,43 @@ def presse_medias():
 
 @app.route('/equipe')
 def equipe():
-    return render_template('equipe.html')
+    bureau = [
+        {
+            'name': 'KOUASSI Yao',
+            'role': 'Président',
+            'description': 'Détective privé expérimenté et fondateur de la CNDPEPCI',
+            'photo': url_for('static', filename='images/members/kouassi_yao.jpg')
+        },
+        {
+            'name': 'LAGO Hugues',
+            'role': 'Vice-Président',
+            'description': 'Expert en investigation et formation professionnelle',
+            'photo': url_for('static', filename='images/members/hugues_lago.jpg')
+        },
+        {
+            'name': 'DIABY Adams',
+            'role': 'Secrétaire Général',
+            'description': 'Spécialiste en réglementation et affaires juridiques',
+            'photo': url_for('static', filename='images/members/adams_diaby.jpg')
+        }
+    ]
+    
+    commissions = [
+        {
+            'name': 'Commission Formation et Certification',
+            'president': 'HONDE Jean-Michel',
+            'description': 'Responsable des programmes de formation et de la certification des détectives',
+            'members': ['HONDE Jean-Michel', 'OUA Bernard', 'MBO Abraham']
+        },
+        {
+            'name': 'Commission Éthique et Déontologie',
+            'president': 'BALLIET Fernand',
+            'description': 'Veille au respect des règles déontologiques de la profession',
+            'members': ['BALLIET Fernand', 'LAGO Hugues', 'DIABY Adams']
+        }
+    ]
+    
+    return render_template('equipe.html', bureau=bureau, commissions=commissions)
 
 @app.route('/president')
 def president():
