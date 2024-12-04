@@ -18,8 +18,8 @@
                         {% endif %}
                     {% endwith %}
                     
-                    <form method="POST" action="{{ url_for('login') }}">
-                        {{ form.hidden_tag() }}
+                    <form method="POST" action="{{ url_for('dashboard_login') }}">
+                        {{ form.csrf_token }}
                         <div class="mb-3">
                             {{ form.username.label(class="form-label") }}
                             {{ form.username(class="form-control") }}

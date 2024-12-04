@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth.login'
 import os
 from blueprints.auth import bp as auth_bp
 from blueprints.forum import bp as forum_bp
@@ -211,11 +211,11 @@ def contact():
         return redirect(url_for('contact'))
     return render_template('contact.html', form=form)
 
-# Admin routes
-@app.route('/admin/login', methods=['GET', 'POST'])
-def login():
+# Dashboard login route
+@app.route('/dashboard/login', methods=['GET', 'POST'])
+def dashboard_login():
     if current_user.is_authenticated:
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('dashboard_home'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -227,14 +227,14 @@ def login():
         else:
             login_user(user)
             flash('Connexion réussie!', 'success')
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('dashboard_home'))
     return render_template('admin/login.html', form=form)
 
-@app.route('/admin/logout')
+@app.route('/dashboard/logout')
 @login_required
-def logout():
+def dashboard_logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('dashboard_login'))
 
 @app.route('/dashboard')
 @app.route('/dashboard/home')
