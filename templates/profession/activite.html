@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Types d'Activités et Services{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h1 class="mt-4">Types d'Activités et Services</h1>
+            <p class="lead">Découvrez les différents domaines d'intervention des détectives privés en Côte d'Ivoire.</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Enquêtes civiles -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-search"></i> Enquêtes Civiles</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Recherche de personnes disparues</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Enquêtes familiales</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Vérifications de moralité</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Enquêtes matrimoniales</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enquêtes commerciales -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-briefcase"></i> Enquêtes Commerciales</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Lutte contre la contrefaçon</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Concurrence déloyale</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Enquêtes de solvabilité</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Protection de la propriété intellectuelle</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investigations numériques -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-laptop"></i> Investigations Numériques</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Cybersurveillance</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Recherches sur réseaux sociaux</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Analyse de données numériques</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Protection contre l'espionnage industriel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sécurité des entreprises -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-shield-alt"></i> Sécurité des Entreprises</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Audit de sécurité</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Enquêtes internes</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Prévention des fraudes</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Protection du patrimoine</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Contact -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h3>Besoin d'un détective privé ?</h3>
+                    <p>Consultez notre annuaire des détectives agréés ou contactez-nous directement.</p>
+                    <div class="mt-3">
+                        <a href="{{ url_for('directory') }}" class="btn btn-primary me-2">Annuaire des détectives</a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">Nous contacter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+{% endblock %}

@@ -9,7 +9,7 @@ member_data = {
     "agency_name": "CCRPCI (Cabinet de Conseils et de Recherches Privées de Côte d'Ivoire)",
     "role": "Directeur d'Agence",
     "license_number": "CCRPCI 0005/01/10/2024/ABj",
-    "experience_years": 11,
+    "experience_years": 3,
     "domains": "Touts Types de Fraudes,Contrefaçon,Enquêtes privées,Surveillances",
     "certifications": "BSR Lutte contre la Fraude"
 }

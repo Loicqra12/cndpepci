@@ -68,6 +68,10 @@ def profession_metier():
 def profession_reglementation():
     return render_template('profession/reglementation.html')
 
+@app.route('/profession/activite')
+def profession_activite():
+    return render_template('profession/activite.html')
+
 @app.route('/client/services')
 def client_services():
     return render_template('client/services.html')
