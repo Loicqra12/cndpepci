@@ -1,12 +1,9 @@
 import os
-from flask import Flask, render_template, redirect, url_for, flash, request, session
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from flask_talisman import Talisman
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta
+from datetime import datetime
 from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
@@ -14,24 +11,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'images', 'members')
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=2)
-app.config['SESSION_TYPE'] = 'filesystem'
-
-# Sécurité
-Talisman(app, content_security_policy={
-    'default-src': "'self'",
-    'img-src': "'self' data: https:",
-    'script-src': "'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com",
-    'style-src': "'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
-    'font-src': "'self' https://cdnjs.cloudflare.com"
-})
-
-# Rate limiting
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -185,37 +164,114 @@ def contact():
         return redirect(url_for('contact'))
     return render_template('contact.html', form=form)
 
-# Register blueprints
-from blueprints.admin import admin
-app.register_blueprint(admin)
-
-# Error handlers
-@app.errorhandler(404)
-def page_not_found(error):
-    app.logger.error(f'Page not found: {request.url}')
-    return render_template('errors/404.html'), 404
-
-@app.errorhandler(500)
-def internal_server_error(error):
-    app.logger.error(f'Server Error: {error}')
-    return render_template('errors/500.html'), 500
-
-# Configure logging
-if not app.debug:
-    import logging
-    from logging.handlers import RotatingFileHandler
-    import os
+# Admin routes
+@app.route('/admin/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin_dashboard'))
     
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/cndpepci.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.setLevel(logging.INFO)
-    app.logger.info('CNDPEPCI startup')
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect(url_for('admin_dashboard'))
+        flash('Invalid username or password', 'error')
+    return render_template('admin/login.html', form=form)
+
+@app.route('/admin/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/admin')
+@app.route('/admin/dashboard')
+@login_required
+def admin_dashboard():
+    total_members = Member.query.count()
+    active_members = Member.query.filter_by(active=True).count()
+    total_pages = Page.query.count()
+    total_news = News.query.count()
+    
+    # Récupérer les derniers membres ajoutés
+    recent_members = Member.query.order_by(Member.id.desc()).limit(5).all()
+    
+    return render_template('admin/dashboard.html',
+                         total_members=total_members,
+                         active_members=active_members,
+                         total_pages=total_pages,
+                         total_news=total_news,
+                         recent_members=recent_members)
+
+@app.route('/admin/members')
+@login_required
+def admin_members():
+    members = Member.query.all()
+    form = MemberForm()
+    return render_template('admin/members.html', members=members, form=form)
+
+@app.route('/admin/members/add', methods=['POST'])
+@login_required
+def admin_add_member():
+    form = MemberForm()
+    if form.validate_on_submit():
+        member = Member()
+        form.populate_obj(member)
+        
+        # Gestion de la photo
+        if form.photo.data:
+            filename = secure_filename(form.photo.data.filename)
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            form.photo.data.save(photo_path)
+            member.photo_url = filename
+            
+        db.session.add(member)
+        db.session.commit()
+        flash('Nouveau membre ajouté avec succès.', 'success')
+        return redirect(url_for('admin_members'))
+        
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{getattr(form, field).label.text}: {error}', 'error')
+    return redirect(url_for('admin_members'))
+
+@app.route('/admin/members/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def admin_member_edit(id):
+    member = Member.query.get_or_404(id)
+    form = MemberForm(obj=member)
+    
+    if form.validate_on_submit():
+        form.populate_obj(member)
+        
+        # Gestion de la photo
+        if form.photo.data:
+            filename = secure_filename(form.photo.data.filename)
+            photo_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            form.photo.data.save(photo_path)
+            member.photo_url = filename
+            
+        db.session.commit()
+        flash('Membre mis à jour avec succès.', 'success')
+        return redirect(url_for('admin_members'))
+        
+    return render_template('admin/member_edit.html', form=form, member=member)
+
+@app.route('/admin/members/<int:id>')
+@login_required
+def admin_member_details(id):
+    member = Member.query.get_or_404(id)
+    return render_template('admin/member_details.html', member=member)
+
+@app.route('/admin/content')
+@login_required
+def admin_content():
+    pages = Page.query.all()
+    news = News.query.order_by(News.date_posted.desc()).all()
+    form = PageForm()
+    return render_template('admin/content.html', pages=pages, news=news, form=form)
+
 # Initialize database
 with app.app_context():
     db.create_all()
@@ -226,5 +282,3 @@ with app.app_context():
         admin.set_password('admin')  # Change this in production!
         db.session.add(admin)
         db.session.commit()
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
