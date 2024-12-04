@@ -57,7 +57,7 @@ class ForumCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
-    order = db.Column(db.Integer, default=0)
+    position = db.Column(db.Integer, default=0)
     topics = db.relationship('ForumTopic', backref='category', lazy='dynamic')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

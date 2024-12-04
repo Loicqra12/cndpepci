@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.title }} - Forum CNDPEPCI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('forum.index') }}">Forum</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('forum.category', id=topic.category.id) }}">{{ topic.category.name }}</a></li>
+                    <li class="breadcrumb-item active">{{ topic.title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Topic initial -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="h4 mb-0">{{ topic.title }}</h2>
+                        <small class="text-muted">{{ topic.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div class="mb-2">
+                                <strong>{{ topic.author.username }}</strong>
+                            </div>
+                            <div class="small text-muted">
+                                Membre depuis {{ topic.author.date_registered.strftime('%d/%m/%Y') }}
+                            </div>
+                        </div>
+                        <div class="col-md-10 border-start">
+                            {{ topic.content|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Réponses -->
+            {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <div class="mb-2">
+                                <strong>{{ post.author.username }}</strong>
+                            </div>
+                            <div class="small text-muted">
+                                Membre depuis {{ post.author.date_registered.strftime('%d/%m/%Y') }}
+                            </div>
+                        </div>
+                        <div class="col-md-10 border-start">
+                            {{ post.content|safe }}
+                            {% if post.is_edited %}
+                            <div class="small text-muted mt-2">
+                                Modifié le {{ post.updated_at.strftime('%d/%m/%Y %H:%M') }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Formulaire de réponse -->
+            {% if current_user.is_authenticated %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">Répondre</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.csrf_token }}
+                        <div class="mb-3">
+                            {{ form.content.label(class="form-label") }}
+                            {{ form.content(class="form-control", rows=5) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <a href="{{ url_for('auth.login') }}">Connectez-vous</a> pour participer à la discussion.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

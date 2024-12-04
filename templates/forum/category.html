@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - Forum CNDPEPCI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('forum.index') }}">Forum</a></li>
+                    <li class="breadcrumb-item active">{{ category.name }}</li>
+                </ol>
+            </nav>
+            
+            {% if current_user.is_authenticated %}
+            <div class="text-end">
+                <a href="{{ url_for('forum.new_topic', category_id=category.id) }}" class="btn btn-primary">
+                    Nouveau sujet
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for topic in topics %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="h5 mb-0">
+                            <a href="{{ url_for('forum.topic', id=topic.id) }}" class="text-decoration-none">
+                                {% if topic.is_pinned %}📌 {% endif %}
+                                {{ topic.title }}
+                            </a>
+                        </h3>
+                        <small class="text-muted">
+                            {{ topic.posts.count() }} réponses
+                        </small>
+                    </div>
+                    <div class="small text-muted mt-2">
+                        Par {{ topic.author.username }} - {{ topic.created_at.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                Aucun sujet dans cette catégorie. Soyez le premier à en créer un !
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

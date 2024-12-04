@@ -76,4 +76,4 @@ class ForumPostForm(FlaskForm):
 class ForumCategoryForm(FlaskForm):
     name = StringField('Nom', validators=[DataRequired(), Length(max=100)])
     description = TextAreaField('Description')
-    order = IntegerField('Ordre d\'affichage', default=0)
+    position = IntegerField('Ordre d\'affichage', default=0)

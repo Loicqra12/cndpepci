@@ -8,7 +8,7 @@ bp = Blueprint('forum', __name__)
 
 @bp.route('/forum')
 def index():
-    categories = ForumCategory.query.order_by(ForumCategory.order).all()
+    categories = ForumCategory.query.order_by(ForumCategory.position).all()
     return render_template('forum/index.html', categories=categories)
 
 @bp.route('/forum/category/<int:id>')
@@ -88,5 +88,5 @@ def admin_categories():
         db.session.commit()
         flash('La catégorie a été créée.', 'success')
         return redirect(url_for('forum.admin_categories'))
-    categories = ForumCategory.query.order_by(ForumCategory.order).all()
+    categories = ForumCategory.query.order_by(ForumCategory.position).all()
     return render_template('forum/admin_categories.html', categories=categories, form=form)
