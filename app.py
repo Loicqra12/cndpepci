@@ -4,6 +4,7 @@ from flask_login import login_required, current_user, login_user, logout_user, L
 from werkzeug.utils import secure_filename
 from extensions import db, login_manager, migrate
 from flask_wtf.csrf import CSRFProtect
+from models import User, Member, ForumTopic, ForumPost, ForumCategory, Page, News
 
 def create_app():
     app = Flask(__name__)
@@ -13,6 +14,12 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cndpepci.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = os.path.join('static', 'images', 'members')
+    
+    # Configuration des cookies de session pour le développement local
+    app.config['SESSION_COOKIE_SECURE'] = False  # Désactivé pour le développement local
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['REMEMBER_COOKIE_SECURE'] = False  # Désactivé pour le développement local
+    app.config['REMEMBER_COOKIE_SAMESITE'] = 'Lax'
 
     # Initialize extensions
     db.init_app(app)
@@ -20,13 +27,46 @@ def create_app():
     migrate.init_app(app, db)
     csrf = CSRFProtect(app)
 
+    # Configure Flask-Login
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    login_manager.login_view = 'admin_login'
+    login_manager.login_message = 'Veuillez vous connecter pour accéder à cette page.'
+    login_manager.login_message_category = 'info'
+
+    # Ensure the upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+    def add_member_with_photo(member_data, photo_filename=None, source_photo_path=None):
+        try:
+            # Créer une nouvelle instance de Member avec les données fournies
+            new_member = Member(**member_data)
+            
+            # Si une photo est fournie, la copier dans le dossier des uploads
+            if photo_filename and source_photo_path:
+                if os.path.exists(source_photo_path):
+                    target_path = os.path.join(app.config['UPLOAD_FOLDER'], photo_filename)
+                    import shutil
+                    shutil.copy2(source_photo_path, target_path)
+                    new_member.photo_url = photo_filename
+            
+            # Ajouter et sauvegarder le membre dans la base de données
+            db.session.add(new_member)
+            db.session.commit()
+            print(f"Membre {new_member.first_name} {new_member.last_name} ajouté avec succès!")
+            return new_member
+        except Exception as e:
+            print(f"Erreur lors de l'ajout du membre: {str(e)}")
+            db.session.rollback()
+            return None
+
+    app.add_member_with_photo = add_member_with_photo
+
     with app.app_context():
         # Import models
         from models import User, Member, Page, News
-
-        @login_manager.user_loader
-        def load_user(user_id):
-            return User.query.get(int(user_id))
 
         # Register blueprints
         from blueprints import init_app
@@ -146,30 +186,10 @@ def create_app():
 
         @app.route('/directory')
         def directory():
-            search = request.args.get('search', '')
-            region = request.args.get('region', '')
-            
-            query = Member.query.filter_by(active=True)
-            
-            if search:
-                query = query.filter(
-                    db.or_(
-                        Member.first_name.ilike(f'%{search}%'),
-                        Member.last_name.ilike(f'%{search}%'),
-                        Member.agency_name.ilike(f'%{search}%'),
-                        Member.specialization.ilike(f'%{search}%')
-                    )
-                )
-            if region:
-                query = query.filter_by(region=region)
-                
-            members = query.all()
-            
-            # Préparer les données pour l'affichage
+            members = Member.query.all()
             for member in members:
                 member.domains_list = member.get_domains_list()
                 member.certifications_list = member.get_certifications_list()
-                
             return render_template('directory.html', members=members)
 
         @app.route('/annuaire')
@@ -503,6 +523,90 @@ def create_app():
                 db.session.rollback()
                 flash(f'Erreur lors de la suppression de l\'actualité: {str(e)}', 'error')
             return redirect(url_for('dashboard_content'))
+
+        # Routes d'administration
+        @app.route('/admin')
+        @login_required
+        def admin():
+            if not current_user.is_admin:
+                flash('Accès non autorisé.', 'danger')
+                return redirect(url_for('index'))
+            members = Member.query.all()
+            return render_template('admin/dashboard.html', members=members)
+
+        @app.route('/admin/login', methods=['GET', 'POST'])
+        def admin_login():
+            if current_user.is_authenticated:
+                return redirect(url_for('admin'))
+            
+            if request.method == 'POST':
+                email = request.form.get('email')
+                password = request.form.get('password')
+                user = User.query.filter_by(email=email).first()
+                
+                if user and user.check_password(password) and user.is_admin:
+                    login_user(user)
+                    next_page = request.args.get('next')
+                    return redirect(next_page or url_for('admin'))
+                flash('Email ou mot de passe incorrect.', 'danger')
+            
+            return render_template('admin/login.html')
+
+        @app.route('/admin/logout')
+        @login_required
+        def admin_logout():
+            logout_user()
+            return redirect(url_for('admin_login'))
+
+        @app.route('/admin/members')
+        @login_required
+        def admin_members():
+            if not current_user.is_admin:
+                flash('Accès non autorisé.', 'danger')
+                return redirect(url_for('index'))
+            members = Member.query.all()
+            return render_template('admin/members.html', members=members)
+
+        @app.route('/admin/member/add', methods=['GET', 'POST'])
+        @login_required
+        def admin_add_member():
+            if not current_user.is_admin:
+                flash('Accès non autorisé.', 'danger')
+                return redirect(url_for('index'))
+            
+            if request.method == 'POST':
+                member_data = {
+                    'first_name': request.form.get('first_name'),
+                    'last_name': request.form.get('last_name'),
+                    'email': request.form.get('email'),
+                    'phone': request.form.get('phone'),
+                    'agency_name': request.form.get('agency_name'),
+                    'role': request.form.get('role'),
+                    'region': request.form.get('region'),
+                    'license_number': request.form.get('license_number'),
+                    'experience_years': int(request.form.get('experience_years', 0)),
+                    'domains': request.form.get('domains'),
+                    'certifications': request.form.get('certifications'),
+                    'website': request.form.get('website')
+                }
+                
+                photo = request.files.get('photo')
+                if photo:
+                    filename = secure_filename(photo.filename)
+                    photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    member_data['photo_url'] = filename
+                
+                try:
+                    new_member = Member(**member_data)
+                    db.session.add(new_member)
+                    db.session.commit()
+                    flash('Membre ajouté avec succès!', 'success')
+                    return redirect(url_for('admin_members'))
+                except Exception as e:
+                    flash(f'Erreur lors de l\'ajout du membre: {str(e)}', 'danger')
+                    db.session.rollback()
+            
+            return render_template('admin/add_member.html')
 
         # Create database tables
         db.create_all()

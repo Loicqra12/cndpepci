@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Feather icons
-    feather.replace();
-
     // Initialize tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -36,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Initialize modals
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modalEl => {
+        new bootstrap.Modal(modalEl);
+    });
+
     // Admin content editor
     const contentEditor = document.getElementById('content-editor');
     if (contentEditor) {
@@ -45,24 +48,36 @@ document.addEventListener('DOMContentLoaded', function() {
         toolbar.innerHTML = `
             <div class="btn-group me-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary" data-command="bold">
-                    <i data-feather="bold"></i>
+                    <i class="bi bi-type-bold"></i>
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" data-command="italic">
-                    <i data-feather="italic"></i>
+                    <i class="bi bi-type-italic"></i>
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-secondary" data-command="underline">
-                    <i data-feather="underline"></i>
+                    <i class="bi bi-type-underline"></i>
+                </button>
+            </div>
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-command="justifyLeft">
+                    <i class="bi bi-text-left"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-command="justifyCenter">
+                    <i class="bi bi-text-center"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-command="justifyRight">
+                    <i class="bi bi-text-right"></i>
                 </button>
             </div>
         `;
-        
+
         contentEditor.parentNode.insertBefore(toolbar, contentEditor);
-        
+
+        // Handle toolbar button clicks
         toolbar.querySelectorAll('[data-command]').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
+            button.addEventListener('click', function() {
                 const command = this.dataset.command;
                 document.execCommand(command, false, null);
+                contentEditor.focus();
             });
         });
     }
@@ -76,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize map (assuming using Leaflet.js)
         const map = L.map('member-map').setView([lat, lng], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: ' OpenStreetMap contributors'
         }).addTo(map);
         
         L.marker([lat, lng]).addTo(map);

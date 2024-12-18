@@ -18,15 +18,15 @@
                         {% endif %}
                     {% endwith %}
                     
-                    <form method="POST" action="{{ url_for('dashboard_login') }}">
-                        {{ form.csrf_token }}
+                    <form method="POST" action="{{ url_for('admin_login') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="mb-3">
-                            {{ form.username.label(class="form-label") }}
-                            {{ form.username(class="form-control") }}
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="mb-3">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(class="form-control") }}
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Connexion</button>
                     </form>

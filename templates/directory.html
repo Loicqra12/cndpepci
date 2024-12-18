@@ -5,74 +5,76 @@
 {% block extra_css %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
+.member-card {
+    transition: transform 0.2s;
+    height: 100%;
+    cursor: pointer;
+}
+
+.member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
 .member-photo {
-    width: 70px;
-    height: 70px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
+    margin-bottom: 15px;
 }
-.table th {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-    font-size: 0.9em;
-}
-.table td {
-    vertical-align: middle;
-    font-size: 0.85em;
-    border-right: 1px solid #e0e0e0;
-}
-.table td:last-child {
-    border-right: none;
-}
-.badge-domain {
-    background-color: #e3f2fd;
-    color: #0d47a1;
-    font-size: 0.8em;
-    margin-right: 0.25rem;
-    padding: 0.35em 0.65em;
-}
-.badge-certification {
-    background-color: #e7f5ee;
-    color: #28a745;
-    font-size: 0.8em;
-    margin-right: 0.25rem;
-    padding: 0.35em 0.65em;
-}
-.info-icon {
-    color: #6c757d;
-    font-size: 0.8em;
-    margin-right: 0.5rem;
-}
-.email-text {
-    font-size: 0.75em;
-}
-.license-number {
-    font-size: 0.65em;
-    display: inline-block;
-    white-space: nowrap;
-}
-.agency-name {
-    font-size: 0.75em;
-    color: #495057;
-    display: block;
-    margin-bottom: 2px;
-}
-.text-muted.d-inline {
-    display: inline-block !important;
-}
+
 .domain-tag {
     background-color: #e3f2fd;
     color: #0d47a1;
     font-size: 0.8em;
-    margin-right: 0.25rem;
+    margin: 2px;
     padding: 0.35em 0.65em;
+    border-radius: 15px;
+    display: inline-block;
 }
+
 .certification-tag {
     background-color: #e7f5ee;
     color: #28a745;
     font-size: 0.8em;
-    margin-right: 0.25rem;
+    margin: 2px;
     padding: 0.35em 0.65em;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.modal-photo {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    margin: 10px 0;
+}
+
+.contact-info i {
+    width: 25px;
+    color: #0d6efd;
+}
+
+.license-number {
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+.experience-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #0d6efd;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
 }
 </style>
 {% endblock %}
@@ -80,96 +82,88 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-12 text-center">
             <h1 class="mb-4">Annuaire des Détectives Privés</h1>
             <p class="lead">Trouvez un détective privé professionnel en Côte d'Ivoire</p>
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Photo</th>
-                    <th>Informations</th>
-                    <th>Coordonnées</th>
-                    <th>Domaines d'expertise</th>
-                    <th>Certifications</th>
-                    <th>Expérience</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                <tr>
-                    <td>
-                        {% if member.photo_url %}
-                        <img src="{{ url_for('static', filename=member.photo_url) }}" class="member-photo" alt="{{ member.first_name }}">
-                        {% else %}
-                        <img src="https://i.pravatar.cc/80?img={{ member.id }}" class="member-photo" alt="{{ member.first_name }}">
-                        {% endif %}
-                    </td>
-                    <td>
-                        <strong>{{ member.first_name }} {{ member.last_name }}</strong> -
-                        <small class="text-muted d-inline">{{ member.role }}</small><br>
-                        {% if member.agency_name %}
-                        <small class="agency-name">{{ member.agency_name }}</small><br>
-                        {% endif %}
-                        <small class="text-primary license-number">{{ member.license_number }}</small>
-                    </td>
-                    <td>
-                        <div data-bs-toggle="tooltip" title="Téléphone">
-                            <i class="fas fa-phone info-icon"></i>
-                            <a href="tel:{{ member.phone }}" class="text-decoration-none">{{ member.phone }}</a>
-                        </div>
-                        <div class="d-inline-block me-3">
-                            <i class="fas fa-envelope info-icon"></i>
-                            <a href="mailto:{{ member.email }}" class="text-decoration-none email-text">{{ member.email }}</a>
-                        </div>
-                        <div data-bs-toggle="tooltip" title="Région">
-                            <i class="fas fa-map-marker-alt info-icon"></i>{{ member.region }}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="member-domains">
-                            <h6>Domaines d'expertise:</h6>
-                            <div class="domains-list">
-                                {% for domain in member.domains_list %}
-                                    <span class="domain-tag">{{ domain }}</span>
-                                {% endfor %}
+    <div class="row g-4">
+        {% for member in members %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card member-card" data-bs-toggle="modal" data-bs-target="#memberModal{{ member.id }}">
+                <div class="card-body text-center">
+                    <div class="experience-badge">
+                        {{ member.experience_years }} ans d'expérience
+                    </div>
+                    {% if member.photo_url %}
+                    <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" class="member-photo" alt="{{ member.first_name }}">
+                    {% else %}
+                    <img src="https://i.pravatar.cc/200?img={{ member.id }}" class="member-photo" alt="{{ member.first_name }}">
+                    {% endif %}
+                    <h4>{{ member.first_name }} {{ member.last_name }}</h4>
+                    <p class="text-muted mb-2">{{ member.role }}</p>
+                    <p class="agency-name">{{ member.agency_name }}</p>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> {{ member.region or 'Non spécifié' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pour chaque membre -->
+        <div class="modal fade" id="memberModal{{ member.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ member.first_name }} {{ member.last_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-5 text-center">
+                                {% if member.photo_url %}
+                                <img src="{{ url_for('static', filename='images/members/' + member.photo_url) }}" class="modal-photo" alt="{{ member.first_name }}">
+                                {% else %}
+                                <img src="https://i.pravatar.cc/300?img={{ member.id }}" class="modal-photo" alt="{{ member.first_name }}">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-7">
+                                <h4>{{ member.role }}</h4>
+                                <p class="text-primary">{{ member.agency_name }}</p>
+                                <p class="license-number">{{ member.license_number }}</p>
+                                
+                                <div class="contact-info">
+                                    <p><i class="fas fa-phone"></i> <a href="tel:{{ member.phone }}" class="text-decoration-none">{{ member.phone }}</a></p>
+                                    <p><i class="fas fa-envelope"></i> <a href="mailto:{{ member.email }}" class="text-decoration-none">{{ member.email }}</a></p>
+                                    <p><i class="fas fa-map-marker-alt"></i> {{ member.region or 'Non spécifié' }}</p>
+                                    {% if member.website %}
+                                    <p><i class="fas fa-globe"></i> <a href="{{ member.website }}" target="_blank" class="text-decoration-none">{{ member.website }}</a></p>
+                                    {% endif %}
+                                </div>
+
+                                <h5 class="mt-4">Domaines d'expertise</h5>
+                                <div class="domains-list">
+                                    {% for domain in member.domains_list %}
+                                        <span class="domain-tag">{{ domain }}</span>
+                                    {% endfor %}
+                                </div>
+
+                                {% if member.certifications_list %}
+                                <h5 class="mt-4">Certifications</h5>
+                                <div class="certifications-list">
+                                    {% for certification in member.certifications_list %}
+                                        <span class="certification-tag">{{ certification }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        {% if member.certifications_list %}
-                        <div class="member-certifications">
-                            <h6>Certifications:</h6>
-                            <div class="certifications-list">
-                                {% for cert in member.certifications_list %}
-                                    <span class="certification-tag">{{ cert }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <i class="fas fa-clock info-icon"></i>
-                        {{ member.experience_years }} ans
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
-});
-</script>
 {% endblock %}

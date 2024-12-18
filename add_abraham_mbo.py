@@ -1,4 +1,7 @@
-from app import app, add_member_with_photo
+from app import create_app
+from models import db
+
+app = create_app()
 
 # Préparer les données du membre
 member_data = {
@@ -18,6 +21,4 @@ with app.app_context():
     # Ajouter le membre avec sa photo
     photo_filename = 'WhatsApp Image 2024-12-03 à 22.55.04_d2fb711e.jpg'
     source_photo_path = photo_filename
-    
-    member = add_member_with_photo(member_data, photo_filename, source_photo_path)
-    print(f"Membre ajouté avec succès. ID: {member.id}")
+    app.add_member_with_photo(member_data, photo_filename, source_photo_path)
