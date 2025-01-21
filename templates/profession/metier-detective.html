@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- En-tête -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-4">{{ content.intro }}</h1>
+            <div class="w-50 mx-auto">
+                <hr class="my-4">
+            </div>
+        </div>
+    </div>
+
+    <!-- Sections principales -->
+    <div class="row g-4">
+        {% for section in content.sections %}
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi {{ section.icon }} fs-2 me-3 text-primary"></i>
+                        <h3 class="card-title mb-0">{{ section.title }}</h3>
+                    </div>
+                    <p class="card-text">{{ section.content }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Section CTA -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="p-5 bg-light rounded">
+                <h2 class="mb-4">Vous souhaitez devenir détective privé ?</h2>
+                <p class="lead mb-4">
+                    La CNDPEPCI vous accompagne dans votre parcours professionnel.
+                    Découvrez nos formations et les conditions d'exercice du métier.
+                </p>
+                <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">
+                    Contactez-nous
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section FAQ -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Questions Fréquentes</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Quelles sont les conditions pour devenir détective privé ?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pour devenir détective privé en Côte d'Ivoire, vous devez :
+                            <ul>
+                                <li>Être majeur et de nationalité ivoirienne</li>
+                                <li>Avoir un casier judiciaire vierge</li>
+                                <li>Suivre une formation professionnelle agréée</li>
+                                <li>Obtenir une autorisation d'exercer</li>
+                                <li>Adhérer à un code de déontologie strict</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Quelle formation est nécessaire ?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            La formation comprend plusieurs modules essentiels :
+                            <ul>
+                                <li>Droit et réglementation</li>
+                                <li>Techniques d'investigation</li>
+                                <li>Surveillance et filature</li>
+                                <li>Enquête numérique</li>
+                                <li>Éthique professionnelle</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

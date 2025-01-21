@@ -1,77 +1,132 @@
 {% extends "base.html" %}
 
-{% block title %}Certification{% endblock %}
+{% block title %}Certification CNDPEPCI{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">
+    <!-- En-tête -->
     <div class="row mb-5">
-        <div class="col-md-12">
-            <img src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Certification professionnelle">
-            <h1 class="mt-4">Certification Professionnelle</h1>
+        <div class="col-12 text-center">
+            <h1 class="display-4">Certification Professionnelle</h1>
+            <p class="lead">Obtenez votre certification officielle de détective privé</p>
+            <div class="w-50 mx-auto">
+                <hr class="my-4">
+            </div>
         </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col-md-8">
-            <div class="content">
-                <h2>Processus de certification</h2>
-                <p class="lead">La certification CNDPEPCI est la référence pour les détectives privés en Côte d'Ivoire.</p>
-                
-                <div class="mb-4">
-                    <h3>Étapes de certification</h3>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <ol>
-                                <li>Formation initiale complète</li>
-                                <li>Examen théorique</li>
-                                <li>Évaluation pratique</li>
-                                <li>Validation du dossier</li>
-                                <li>Attribution de la certification</li>
-                            </ol>
+    <!-- Certifications -->
+    <div class="row g-4">
+        {% for cert in certifications %}
+        <div class="col-lg-4">
+            <div class="card h-100 border-0 shadow-sm certification-card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <i class="bi {{ cert.icon }} display-1 text-primary"></i>
+                    </div>
+                    <h3 class="card-title h4 text-center mb-3">{{ cert.title }}</h3>
+                    <p class="card-text text-muted mb-4">{{ cert.description }}</p>
+                    
+                    <h4 class="h5 mb-3">Conditions requises :</h4>
+                    <ul class="list-unstyled">
+                        {% for req in cert.requirements %}
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            {{ req }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <div class="text-center mt-4">
+                        <div class="badge bg-primary">
+                            <i class="bi bi-clock me-2"></i>
+                            Validité : {{ cert.validity }}
                         </div>
                     </div>
                 </div>
+                <div class="card-footer bg-transparent border-0 text-center">
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">
+                        Demander la certification
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-                <div class="mb-4">
-                    <h3>Niveaux de certification</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Niveau 1 - Détective Junior</h5>
-                                    <p>Pour les nouveaux professionnels</p>
-                                </div>
-                            </div>
+    <!-- Processus de Certification -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded">
+                <h2 class="text-center mb-4">Processus de Certification</h2>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-1-circle display-4 text-primary"></i>
+                            <h3 class="h5 mt-3">Formation</h3>
+                            <p class="text-muted">Suivez la formation requise</p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Niveau 2 - Détective Senior</h5>
-                                    <p>Pour les professionnels expérimentés</p>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-2-circle display-4 text-primary"></i>
+                            <h3 class="h5 mt-3">Examens</h3>
+                            <p class="text-muted">Passez les examens théoriques et pratiques</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-3-circle display-4 text-primary"></i>
+                            <h3 class="h5 mt-3">Stage</h3>
+                            <p class="text-muted">Effectuez le stage professionnel</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="bi bi-4-circle display-4 text-primary"></i>
+                            <h3 class="h5 mt-3">Certification</h3>
+                            <p class="text-muted">Obtenez votre certification</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title">Prochaines sessions</h4>
-                    <p>Consultez le calendrier des examens.</p>
-                    <a href="{{ url_for('formation_calendrier') }}" class="btn btn-primary">Voir le calendrier</a>
-                </div>
-            </div>
+    </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Questions ?</h4>
-                    <p>Contactez-nous pour plus d'informations.</p>
-                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Nous contacter</a>
+    <!-- CTA Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-primary p-5 rounded text-center text-white">
+                <h2 class="mb-4">Prêt à devenir un professionnel certifié ?</h2>
+                <p class="lead mb-4">
+                    Commencez votre parcours de certification dès aujourd'hui.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('formation_programmes') }}" class="btn btn-light btn-lg">
+                        Voir les formations
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-light btn-lg">
+                        Nous contacter
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Style personnalisé -->
+{% block extra_css %}
+<style>
+    .certification-card {
+        transition: transform 0.3s ease;
+    }
+    .certification-card:hover {
+        transform: translateY(-5px);
+    }
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+</style>
+{% endblock %}
 {% endblock %}

@@ -3,82 +3,67 @@
 {% block title %}Nos Services{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">
+    <!-- En-tête -->
     <div class="row mb-5">
-        <div class="col-md-12">
-            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Professional services">
-            <h1 class="mt-4">Nos Services</h1>
+        <div class="col-12 text-center">
+            <h1 class="display-4">Nos Services</h1>
+            <p class="lead">Des solutions d'investigation professionnelles adaptées à vos besoins</p>
+            <div class="w-50 mx-auto">
+                <hr class="my-4">
+            </div>
         </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col-md-8">
-            <div class="content">
-                <h2>Services proposés</h2>
-                <p class="lead">La CNDPEPCI encadre une large gamme de services d'investigation professionnelle.</p>
-                
-                <div class="mb-4">
-                    <h3>Pour les particuliers</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Recherches familiales</h5>
-                                    <p>Recherche de personnes disparues, enquêtes familiales</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Surveillance</h5>
-                                    <p>Filatures et surveillances discrètes</p>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Services -->
+    <div class="row g-4">
+        {% for service in services %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm service-card">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="bi {{ service.icon }} display-4 text-primary"></i>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <h3>Pour les entreprises</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Enquêtes commerciales</h5>
-                                    <p>Concurrence déloyale, protection des actifs</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Due diligence</h5>
-                                    <p>Vérifications préalables aux transactions</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="card-title h4 text-center mb-3">{{ service.title }}</h3>
+                    <p class="card-text text-muted">{{ service.description }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title">Contact rapide</h4>
-                    <p>Besoin d'un service ? Contactez un détective certifié.</p>
-                    <a href="{{ url_for('directory') }}" class="btn btn-primary">Consulter l'annuaire</a>
-                </div>
-            </div>
+        {% endfor %}
+    </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Questions fréquentes</h4>
-                    <p>Consultez notre FAQ pour plus d'informations.</p>
-                    <a href="{{ url_for('client_faq') }}" class="btn btn-primary">Voir la FAQ</a>
-                </div>
+    <!-- CTA Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded text-center">
+                <h2 class="mb-4">Besoin d'un service sur mesure ?</h2>
+                <p class="lead mb-4">
+                    Contactez-nous pour discuter de votre projet en toute confidentialité.
+                    Notre équipe d'experts est à votre écoute.
+                </p>
+                <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">
+                    Contactez-nous
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Style personnalisé -->
+{% block extra_css %}
+<style>
+    .service-card {
+        transition: transform 0.3s ease;
+    }
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+    .service-card .bi {
+        transition: color 0.3s ease;
+    }
+    .service-card:hover .bi {
+        color: #0056b3 !important;
+    }
+</style>
+{% endblock %}
 {% endblock %}

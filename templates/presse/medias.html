@@ -3,84 +3,179 @@
 {% block title %}Médiathèque{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">
+    <!-- En-tête -->
     <div class="row mb-5">
-        <div class="col-md-12">
-            <h1>Médiathèque</h1>
-            <p class="lead">Retrouvez nos ressources médias : photos, vidéos et documents.</p>
+        <div class="col-12 text-center">
+            <h1 class="display-4">Médiathèque</h1>
+            <p class="lead">Découvrez nos ressources médias</p>
+            <div class="w-50 mx-auto">
+                <hr class="my-4">
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Photos -->
-            <section class="mb-5">
-                <h2>Galerie Photos</h2>
-                <div class="row">
-                    {% for photo in photos %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="{{ photo.url }}" class="card-img-top" alt="{{ photo.title }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ photo.title }}</h5>
-                                <p class="text-muted">{{ photo.date.strftime('%d/%m/%Y') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <!-- Vidéos -->
-            <section class="mb-5">
-                <h2>Vidéos</h2>
-                <div class="row">
-                    {% for video in videos %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="ratio ratio-16x9">
-                                <iframe src="{{ video.url }}" title="{{ video.title }}" allowfullscreen></iframe>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ video.title }}</h5>
-                                <p class="text-muted">{{ video.date.strftime('%d/%m/%Y') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </section>
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-outline-primary active" data-filter="all">Tous</button>
+                <button class="btn btn-outline-primary" data-filter="Vidéo">Vidéos</button>
+                <button class="btn btn-outline-primary" data-filter="Article">Articles</button>
+                <button class="btn btn-outline-primary" data-filter="Photos">Photos</button>
+            </div>
         </div>
-        
-        <div class="col-md-4">
-            <div class="card mb-4">
+    </div>
+
+    <!-- Grille médias -->
+    <div class="row g-4">
+        {% for media in medias %}
+        <div class="col-md-6 col-lg-4" data-type="{{ media.type }}">
+            <div class="card h-100 border-0 shadow-sm media-card">
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='images/' + media.thumbnail) }}" 
+                         class="card-img-top" 
+                         alt="{{ media.title }}"
+                         style="height: 200px; object-fit: cover;">
+                    {% if media.type == 'Vidéo' %}
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                        <div class="bg-white rounded-circle p-3">
+                            <i class="bi bi-play-fill text-primary fs-4"></i>
+                        </div>
+                    </div>
+                    <span class="position-absolute bottom-0 end-0 bg-dark text-white px-2 py-1 m-2 rounded">
+                        {{ media.duration }}
+                    </span>
+                    {% endif %}
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">Téléchargements</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i data-feather="download" class="me-2"></i>
-                            <a href="#">Dossier de presse (PDF)</a>
-                        </li>
-                        <li class="mb-2">
-                            <i data-feather="download" class="me-2"></i>
-                            <a href="#">Logo CNDPEPCI (ZIP)</a>
-                        </li>
-                        <li class="mb-2">
-                            <i data-feather="download" class="me-2"></i>
-                            <a href="#">Charte graphique (PDF)</a>
-                        </li>
-                    </ul>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge {% if media.type == 'Vidéo' %}bg-primary{% elif media.type == 'Article' %}bg-success{% else %}bg-info{% endif %}">
+                            {{ media.type }}
+                        </span>
+                        <small class="text-muted">{{ media.date }}</small>
+                    </div>
+                    <h3 class="card-title h5">{{ media.title }}</h3>
+                    <p class="card-text text-muted">{{ media.description }}</p>
+
+                    {% if media.type == 'Vidéo' %}
+                    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}">
+                        <i class="bi bi-play-fill me-2"></i>Regarder
+                    </button>
+                    {% elif media.type == 'Article' %}
+                    <a href="{{ media.link }}" class="btn btn-outline-primary mt-3" target="_blank">
+                        <i class="bi bi-newspaper me-2"></i>Lire l'article
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#modal-{{ loop.index }}">
+                        <i class="bi bi-images me-2"></i>Voir l'album
+                        <span class="badge bg-light text-primary ms-2">{{ media.count }}</span>
+                    </button>
+                    {% endif %}
                 </div>
             </div>
+        </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Contact Presse</h4>
-                    <p>Pour toute demande de ressources médias.</p>
-                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Contacter le service presse</a>
+        <!-- Modal pour les vidéos et albums photos -->
+        {% if media.type in ['Vidéo', 'Photos'] %}
+        <div class="modal fade" id="modal-{{ loop.index }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ media.title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% if media.type == 'Vidéo' %}
+                        <div class="ratio ratio-16x9">
+                            <iframe src="{{ media.video_url }}" 
+                                    title="{{ media.title }}" 
+                                    allowfullscreen></iframe>
+                        </div>
+                        {% else %}
+                        <div class="row g-3">
+                            {% for photo in media.photos %}
+                            <div class="col-md-4">
+                                <img src="{{ url_for('static', filename='images/' + photo) }}" 
+                                     class="img-fluid rounded" 
+                                     alt="Photo de {{ media.title }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Kit de presse -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded text-center">
+                <h2 class="mb-4">Kit de presse</h2>
+                <p class="lead mb-4">
+                    Téléchargez notre dossier de presse, logos et ressources graphiques
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#" class="btn btn-primary">
+                        <i class="bi bi-file-earmark-pdf me-2"></i>
+                        Dossier de presse
+                    </a>
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-images me-2"></i>
+                        Ressources graphiques
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Style personnalisé -->
+{% block extra_css %}
+<style>
+    .media-card {
+        transition: transform 0.3s ease;
+    }
+    .media-card:hover {
+        transform: translateY(-5px);
+    }
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+</style>
+{% endblock %}
+
+<!-- Script pour les filtres -->
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const mediaCards = document.querySelectorAll('[data-type]');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            // Filter media items
+            mediaCards.forEach(card => {
+                if (filter === 'all' || card.dataset.type === filter) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
 {% endblock %}

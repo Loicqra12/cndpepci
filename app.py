@@ -1,26 +1,23 @@
 import os
+import pymysql
 from flask import Flask, render_template, redirect, url_for, flash, request, current_app, jsonify
 from flask_login import login_required, current_user, login_user, logout_user, LoginManager
 from werkzeug.utils import secure_filename
 from extensions import db, login_manager, migrate
 from flask_wtf.csrf import CSRFProtect
 from models import User, Member, ForumTopic, ForumPost, ForumCategory, Page, News
+from error import configure_error_handlers
+from config import Config
+
+# Utiliser PyMySQL comme pilote MySQL
+pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__)
     
-    # Configuration
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cndpepci.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UPLOAD_FOLDER'] = os.path.join('static', 'images', 'members')
+    # Configuration depuis la classe Config
+    app.config.from_object(Config)
     
-    # Configuration des cookies de session pour le développement local
-    app.config['SESSION_COOKIE_SECURE'] = False  # Désactivé pour le développement local
-    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-    app.config['REMEMBER_COOKIE_SECURE'] = False  # Désactivé pour le développement local
-    app.config['REMEMBER_COOKIE_SAMESITE'] = 'Lax'
-
     # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
@@ -64,6 +61,8 @@ def create_app():
 
     app.add_member_with_photo = add_member_with_photo
 
+    configure_error_handlers(app)
+
     with app.app_context():
         # Import models
         from models import User, Member, Page, News
@@ -77,6 +76,143 @@ def create_app():
         def home():
             news = News.query.order_by(News.date_posted.desc()).limit(3).all()
             return render_template('home.html', news=news)
+
+        @app.route('/notre-equipe')
+        def team():
+            executive_members = [
+                {
+                    'name': 'M. ABRAHAM MBO',
+                    'position': 'Président',
+                    'description': 'Expert en investigation privée avec plus de 20 ans d\'expérience.',
+                    'photo': 'abraham_mbo.jpg',
+                    'linkedin': '#',
+                    'email': 'president@cndpepci.ci'
+                },
+                {
+                    'name': 'M. KOFFI YAO CHARLES',
+                    'position': 'Vice-Président',
+                    'description': 'Spécialiste en sécurité et investigation d\'entreprise.',
+                    'photo': 'default.jpg',
+                    'linkedin': '#',
+                    'email': 'vice-president@cndpepci.ci'
+                },
+                {
+                    'name': 'M. KOUASSI KONAN MARCELIN',
+                    'position': 'Secrétaire Général',
+                    'description': 'Expert en gestion administrative et coordination.',
+                    'photo': 'default.jpg',
+                    'email': 'secretariat@cndpepci.ci'
+                }
+            ]
+            
+            commissions = [
+                {
+                    'name': 'Commission Formation',
+                    'description': 'Chargée de la formation continue et du développement professionnel des membres.',
+                    'icon': 'bi-mortarboard',
+                    'members': ['BALLIET Fernand', 'LAGO Hugues', 'DIABY Adams']
+                },
+                {
+                    'name': 'Commission Éthique',
+                    'description': 'Veille au respect des règles déontologiques et éthiques de la profession.',
+                    'icon': 'bi-shield-check',
+                    'members': ['KOUASSI KONAN MARCELIN', 'KOFFI YAO CHARLES']
+                },
+                {
+                    'name': 'Commission Communication',
+                    'description': 'Gère la communication externe et les relations publiques.',
+                    'icon': 'bi-megaphone',
+                    'members': ['ABRAHAM MBO', 'LAGO Hugues']
+                },
+                {
+                    'name': 'Commission Juridique',
+                    'description': 'Assure la veille juridique et le conseil légal aux membres.',
+                    'icon': 'bi-journal-text',
+                    'members': ['DIABY Adams', 'BALLIET Fernand']
+                },
+                {
+                    'name': 'Commission Technique',
+                    'description': 'Développe les standards et les bonnes pratiques professionnelles.',
+                    'icon': 'bi-gear',
+                    'members': ['KOFFI YAO CHARLES', 'KOUASSI KONAN MARCELIN']
+                },
+                {
+                    'name': 'Commission Relations Internationales',
+                    'description': 'Développe les partenariats internationaux et la coopération.',
+                    'icon': 'bi-globe',
+                    'members': ['ABRAHAM MBO', 'DIABY Adams']
+                }
+            ]
+            
+            return render_template('team.html', 
+                                executive_members=executive_members,
+                                commissions=commissions)
+
+        @app.route('/profession/detective')
+        def profession_detective():
+            return render_template('profession/metier-detective.html', 
+                title="Métier de Détective",
+                content={
+                    'intro': 'Le métier de détective privé en Côte d\'Ivoire',
+                    'sections': [
+                        {
+                            'title': 'Définition et Rôle',
+                            'content': 'Le détective privé est un professionnel agréé qui mène des enquêtes pour le compte de particuliers ou d\'entreprises. Son expertise couvre de nombreux domaines : enquêtes civiles, commerciales, numériques et professionnelles.',
+                            'icon': 'bi-search'
+                        },
+                        {
+                            'title': 'Compétences Requises',
+                            'content': 'Le métier exige des qualités essentielles : discrétion, rigueur, sens de l\'observation, maîtrise des techniques d\'investigation et connaissance du cadre légal.',
+                            'icon': 'bi-person-check'
+                        },
+                        {
+                            'title': 'Domaines d\'Intervention',
+                            'content': 'Les détectives interviennent dans diverses situations : enquêtes de moralité, recherches de personnes, lutte contre la contrefaçon, intelligence économique, cyber-surveillance...',
+                            'icon': 'bi-briefcase'
+                        },
+                        {
+                            'title': 'Cadre Légal',
+                            'content': 'L\'exercice de la profession est strictement réglementé. Le détective doit être titulaire d\'une autorisation d\'exercer et respecter un code de déontologie strict.',
+                            'icon': 'bi-shield-check'
+                        }
+                    ]
+                })
+
+        @app.route('/client/services')
+        def client_services():
+            services = [
+                {
+                    'title': 'Enquêtes Civiles',
+                    'description': 'Recherche de personnes, enquêtes familiales, vérifications pré-matrimoniales.',
+                    'icon': 'bi-people'
+                },
+                {
+                    'title': 'Enquêtes Commerciales',
+                    'description': 'Due diligence, enquêtes de solvabilité, surveillance de la concurrence.',
+                    'icon': 'bi-building'
+                },
+                {
+                    'title': 'Sécurité d\'Entreprise',
+                    'description': 'Audit de sécurité, protection des données, prévention des fraudes.',
+                    'icon': 'bi-shield-lock'
+                },
+                {
+                    'title': 'Cyber-Investigation',
+                    'description': 'Analyse numérique, recherche de preuves électroniques, cyber-surveillance.',
+                    'icon': 'bi-laptop'
+                },
+                {
+                    'title': 'Protection de la Propriété Intellectuelle',
+                    'description': 'Lutte anti-contrefaçon, enquêtes sur les violations de brevets.',
+                    'icon': 'bi-file-earmark-text'
+                },
+                {
+                    'title': 'Formation et Conseil',
+                    'description': 'Formation en sécurité, conseil en gestion des risques.',
+                    'icon': 'bi-mortarboard'
+                }
+            ]
+            return render_template('client/services.html', services=services)
 
         @app.route('/about')
         def about():
@@ -95,79 +231,274 @@ def create_app():
         def profession_activite():
             return render_template('profession/activite.html')
 
-        @app.route('/client/services')
-        def client_services():
-            return render_template('client/services.html')
-
         @app.route('/client/faq')
         def client_faq():
-            return render_template('client/faq.html')
+            faqs = [
+                {
+                    'category': 'Questions Générales',
+                    'questions': [
+                        {
+                            'question': 'Qu\'est-ce qu\'un détective privé ?',
+                            'answer': 'Un détective privé est un professionnel agréé qui mène des enquêtes privées dans le respect de la loi et de la déontologie.'
+                        },
+                        {
+                            'question': 'Comment choisir un détective privé ?',
+                            'answer': 'Vérifiez son agrément officiel, son expérience, ses références et assurez-vous qu\'il est membre d\'une organisation professionnelle reconnue comme la CNDPEPCI.'
+                        }
+                    ]
+                },
+                {
+                    'category': 'Services et Tarifs',
+                    'questions': [
+                        {
+                            'question': 'Quels types de services proposez-vous ?',
+                            'answer': 'Nous proposons des enquêtes civiles, commerciales, numériques, ainsi que des services de protection et de conseil en sécurité.'
+                        },
+                        {
+                            'question': 'Comment sont calculés les honoraires ?',
+                            'answer': 'Les honoraires varient selon la nature et la complexité de la mission. Un devis détaillé est établi après étude de votre dossier.'
+                        }
+                    ]
+                },
+                {
+                    'category': 'Confidentialité et Légalité',
+                    'questions': [
+                        {
+                            'question': 'Les informations sont-elles confidentielles ?',
+                            'answer': 'Absolument. Nous sommes tenus au secret professionnel et appliquons des protocoles stricts de confidentialité.'
+                        },
+                        {
+                            'question': 'Les preuves recueillies sont-elles valables en justice ?',
+                            'answer': 'Oui, si elles sont obtenues légalement. Nos méthodes respectent strictement le cadre légal pour garantir la recevabilité des preuves.'
+                        }
+                    ]
+                }
+            ]
+            return render_template('client/faq.html', faqs=faqs)
 
         @app.route('/formation/programmes')
         def formation_programmes():
-            return render_template('formation/programmes.html')
+            programmes = [
+                {
+                    'title': 'Formation Initiale en Investigation Privée',
+                    'duration': '6 mois',
+                    'description': 'Formation complète couvrant les aspects fondamentaux du métier de détective privé.',
+                    'modules': [
+                        'Cadre juridique et réglementaire',
+                        'Techniques d\'investigation',
+                        'Surveillance et filature',
+                        'Collecte de preuves',
+                        'Rédaction de rapports',
+                        'Éthique professionnelle'
+                    ]
+                },
+                {
+                    'title': 'Formation Continue',
+                    'duration': 'Variable',
+                    'description': 'Modules de perfectionnement pour les professionnels en exercice.',
+                    'modules': [
+                        'Nouvelles technologies d\'investigation',
+                        'Mise à jour juridique',
+                        'Techniques avancées de surveillance',
+                        'Cybersécurité pour détectives'
+                    ]
+                },
+                {
+                    'title': 'Spécialisations',
+                    'duration': '3 mois',
+                    'description': 'Formations spécialisées pour des domaines spécifiques.',
+                    'modules': [
+                        'Investigation d\'entreprise',
+                        'Enquêtes numériques',
+                        'Protection de la propriété intellectuelle',
+                        'Lutte contre la fraude'
+                    ]
+                }
+            ]
+            return render_template('formation/programmes.html', programmes=programmes)
 
         @app.route('/formation/certification')
         def formation_certification():
-            return render_template('formation/certification.html')
+            certifications = [
+                {
+                    'title': 'Certification Professionnelle CNDPEPCI',
+                    'description': 'La certification officielle requise pour exercer en tant que détective privé.',
+                    'requirements': [
+                        'Completion de la formation initiale',
+                        'Examen théorique',
+                        'Évaluation pratique',
+                        'Stage professionnel',
+                        'Validation du dossier par la commission'
+                    ],
+                    'validity': '5 ans',
+                    'icon': 'bi-award'
+                },
+                {
+                    'title': 'Certifications Spécialisées',
+                    'description': 'Certifications pour des domaines d\'expertise spécifiques.',
+                    'requirements': [
+                        'Certification professionnelle valide',
+                        'Formation spécialisée complétée',
+                        'Examen spécifique au domaine',
+                        'Projet pratique'
+                    ],
+                    'validity': '3 ans',
+                    'icon': 'bi-patch-check'
+                },
+                {
+                    'title': 'Renouvellement de Certification',
+                    'description': 'Processus de maintien de la certification professionnelle.',
+                    'requirements': [
+                        'Formation continue',
+                        'Dossier d\'activité',
+                        'Mise à jour des connaissances',
+                        'Validation par la commission'
+                    ],
+                    'validity': '5 ans',
+                    'icon': 'bi-arrow-repeat'
+                }
+            ]
+            return render_template('formation/certification.html', certifications=certifications)
 
         @app.route('/formation/calendrier')
         def formation_calendrier():
-            return render_template('formation/calendrier.html')
+            events = [
+                {
+                    'title': 'Formation Initiale - Session 1',
+                    'date_start': '15 Janvier 2024',
+                    'date_end': '15 Juillet 2024',
+                    'location': 'Centre de Formation CNDPEPCI - Abidjan',
+                    'status': 'Inscriptions ouvertes',
+                    'type': 'formation'
+                },
+                {
+                    'title': 'Examen de Certification',
+                    'date_start': '20 Juillet 2024',
+                    'date_end': '22 Juillet 2024',
+                    'location': 'Siège CNDPEPCI',
+                    'status': 'À venir',
+                    'type': 'examen'
+                },
+                {
+                    'title': 'Formation Continue - Cybersécurité',
+                    'date_start': '5 Août 2024',
+                    'date_end': '9 Août 2024',
+                    'location': 'En ligne',
+                    'status': 'Inscriptions ouvertes',
+                    'type': 'formation'
+                },
+                {
+                    'title': 'Formation Spécialisée - Enquêtes d\'entreprise',
+                    'date_start': '1 Septembre 2024',
+                    'date_end': '30 Novembre 2024',
+                    'location': 'Centre de Formation CNDPEPCI - Abidjan',
+                    'status': 'Prochainement',
+                    'type': 'formation'
+                }
+            ]
+            return render_template('formation/calendrier.html', events=events)
 
         @app.route('/presse/actualites')
         def presse_actualites():
-            articles = News.query.order_by(News.date_posted.desc()).all()
-            return render_template('presse/actualites.html', articles=articles)
+            actualites = [
+                {
+                    'title': 'Nouveau cadre réglementaire pour les détectives privés',
+                    'date': '15 Décembre 2023',
+                    'summary': 'La CNDPEPCI annonce des modifications importantes dans la réglementation des détectives privés.',
+                    'image': 'news-1.jpg',
+                    'category': 'Réglementation',
+                    'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                },
+                {
+                    'title': 'Succès de la formation annuelle des détectives',
+                    'date': '10 Décembre 2023',
+                    'summary': 'Plus de 50 détectives ont participé à la session de formation continue organisée par la CNDPEPCI.',
+                    'image': 'news-2.jpg',
+                    'category': 'Formation',
+                    'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                },
+                {
+                    'title': 'Partenariat international pour la lutte contre la fraude',
+                    'date': '5 Décembre 2023',
+                    'summary': 'La CNDPEPCI signe un accord de collaboration avec des organisations internationales.',
+                    'image': 'news-3.jpg',
+                    'category': 'Partenariat',
+                    'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+                }
+            ]
+            return render_template('presse/actualites.html', actualites=actualites)
 
         @app.route('/presse/communiques')
         def presse_communiques():
-            communiques = News.query.filter_by(type='communique').order_by(News.date_posted.desc()).all()
+            communiques = [
+                {
+                    'title': 'Communiqué officiel : Nouvelles directives pour l\'exercice de la profession',
+                    'date': '18 Décembre 2023',
+                    'reference': 'COM-2023-001',
+                    'content': 'La CNDPEPCI informe tous les détectives privés des nouvelles directives...',
+                    'type': 'Important',
+                    'attachments': ['directive_2023.pdf']
+                },
+                {
+                    'title': 'Résultats des examens de certification - Session Décembre 2023',
+                    'date': '12 Décembre 2023',
+                    'reference': 'COM-2023-002',
+                    'content': 'Suite aux examens de certification qui se sont tenus...',
+                    'type': 'Annonce',
+                    'attachments': ['resultats_dec2023.pdf']
+                },
+                {
+                    'title': 'Appel à candidatures : Commission d\'éthique',
+                    'date': '8 Décembre 2023',
+                    'reference': 'COM-2023-003',
+                    'content': 'La CNDPEPCI lance un appel à candidatures pour renouveler...',
+                    'type': 'Recrutement',
+                    'attachments': []
+                }
+            ]
             return render_template('presse/communiques.html', communiques=communiques)
 
         @app.route('/presse/medias')
         def presse_medias():
-            return render_template('presse/medias.html')
-
-        @app.route('/equipe')
-        def equipe():
-            bureau = [
+            medias = [
                 {
-                    'name': 'KOUASSI Yao',
-                    'role': 'Président',
-                    'description': 'Détective privé expérimenté et fondateur de la CNDPEPCI',
-                    'photo': url_for('static', filename='images/members/kouassi_yao.jpg')
+                    'title': 'Conférence de presse annuelle 2023',
+                    'date': '20 Décembre 2023',
+                    'type': 'Vidéo',
+                    'thumbnail': 'conference-2023.jpg',
+                    'duration': '45:30',
+                    'description': 'Revue annuelle des activités de la CNDPEPCI',
+                    'video_url': 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                 },
                 {
-                    'name': 'LAGO Hugues',
-                    'role': 'Vice-Président',
-                    'description': 'Expert en investigation et formation professionnelle',
-                    'photo': url_for('static', filename='images/members/hugues_lago.jpg')
+                    'title': 'Interview du Président sur RTI',
+                    'date': '15 Décembre 2023',
+                    'type': 'Vidéo',
+                    'thumbnail': 'interview-president.jpg',
+                    'duration': '12:45',
+                    'description': 'Le président de la CNDPEPCI présente les nouveaux enjeux de la profession',
+                    'video_url': 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                 },
                 {
-                    'name': 'DIABY Adams',
-                    'role': 'Secrétaire Général',
-                    'description': 'Spécialiste en réglementation et affaires juridiques',
-                    'photo': url_for('static', filename='images/members/adams_diaby.jpg')
+                    'title': 'Reportage : Dans la peau d\'un détective',
+                    'date': '10 Décembre 2023',
+                    'type': 'Article',
+                    'thumbnail': 'article-detective.jpg',
+                    'source': 'Fraternité Matin',
+                    'link': 'https://example.com/article',
+                    'description': 'Un jour dans la vie d\'un détective privé certifié'
+                },
+                {
+                    'title': 'Album : Cérémonie de remise des certifications',
+                    'date': '5 Décembre 2023',
+                    'type': 'Photos',
+                    'count': 25,
+                    'thumbnail': 'ceremonie-2023.jpg',
+                    'description': 'Photos de la cérémonie officielle de remise des certifications',
+                    'photos': ['photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg', 'photo6.jpg']
                 }
             ]
-            
-            commissions = [
-                {
-                    'name': 'Commission Formation et Certification',
-                    'president': 'HONDE Jean-Michel',
-                    'description': 'Responsable des programmes de formation et de la certification des détectives',
-                    'members': ['HONDE Jean-Michel', 'OUA Bernard', 'MBO Abraham']
-                },
-                {
-                    'name': 'Commission Éthique et Déontologie',
-                    'president': 'BALLIET Fernand',
-                    'description': 'Veille au respect des règles déontologiques de la profession',
-                    'members': ['BALLIET Fernand', 'LAGO Hugues', 'DIABY Adams']
-                }
-            ]
-            
-            return render_template('equipe.html', bureau=bureau, commissions=commissions)
+            return render_template('presse/medias.html', medias=medias)
 
         @app.route('/president')
         def president():
@@ -607,6 +938,10 @@ def create_app():
                     db.session.rollback()
             
             return render_template('admin/add_member.html')
+
+        @app.errorhandler(404)
+        def page_not_found(e):
+            return render_template('errors/404.html'), 404
 
         # Create database tables
         db.create_all()

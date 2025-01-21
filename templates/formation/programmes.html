@@ -3,76 +3,82 @@
 {% block title %}Programmes de Formation{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">
+    <!-- En-tête -->
     <div class="row mb-5">
-        <div class="col-md-12">
-            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;" alt="Formation professionnelle">
-            <h1 class="mt-4">Programmes de Formation</h1>
+        <div class="col-12 text-center">
+            <h1 class="display-4">Nos Programmes de Formation</h1>
+            <p class="lead">Des formations professionnelles pour devenir détective privé certifié</p>
+            <div class="w-50 mx-auto">
+                <hr class="my-4">
+            </div>
         </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col-md-8">
-            <div class="content">
-                <h2>Nos formations professionnelles</h2>
-                <p class="lead">La CNDPEPCI propose des programmes de formation adaptés aux besoins du secteur.</p>
-                
-                <div class="mb-4">
-                    <h3>Formation initiale</h3>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5>Programme de base</h5>
-                            <ul>
-                                <li>Techniques d'investigation</li>
-                                <li>Cadre juridique</li>
-                                <li>Éthique professionnelle</li>
-                                <li>Outils et méthodes</li>
-                            </ul>
-                            <p><strong>Durée:</strong> 6 mois</p>
-                        </div>
-                    </div>
+    <!-- Programmes -->
+    <div class="row g-4">
+        {% for programme in programmes %}
+        <div class="col-lg-4">
+            <div class="card h-100 border-0 shadow-sm programme-card">
+                <div class="card-body">
+                    <h3 class="card-title h4 mb-3">{{ programme.title }}</h3>
+                    <div class="badge bg-primary mb-3">Durée : {{ programme.duration }}</div>
+                    <p class="card-text text-muted mb-4">{{ programme.description }}</p>
+                    
+                    <h4 class="h5 mb-3">Modules :</h4>
+                    <ul class="list-unstyled">
+                        {% for module in programme.modules %}
+                        <li class="mb-2">
+                            <i class="bi bi-check2-circle text-success me-2"></i>
+                            {{ module }}
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-
-                <div class="mb-4">
-                    <h3>Formations spécialisées</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Investigation numérique</h5>
-                                    <p>Techniques d'investigation en environnement digital</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5>Surveillance professionnelle</h5>
-                                    <p>Techniques avancées de filature et surveillance</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card-footer bg-transparent border-0 text-center">
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-primary">
+                        En savoir plus
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title">Calendrier</h4>
-                    <p>Consultez les dates des prochaines sessions.</p>
-                    <a href="{{ url_for('formation_calendrier') }}" class="btn btn-primary">Voir le calendrier</a>
-                </div>
-            </div>
+        {% endfor %}
+    </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Certification</h4>
-                    <p>Découvrez notre processus de certification.</p>
-                    <a href="{{ url_for('formation_certification') }}" class="btn btn-primary">En savoir plus</a>
+    <!-- CTA Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="bg-light p-5 rounded text-center">
+                <h2 class="mb-4">Prêt à commencer votre formation ?</h2>
+                <p class="lead mb-4">
+                    Contactez-nous pour discuter de votre projet professionnel et choisir la formation adaptée à vos objectifs.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">
+                        Nous contacter
+                    </a>
+                    <a href="{{ url_for('formation_calendrier') }}" class="btn btn-outline-primary btn-lg">
+                        Voir le calendrier
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Style personnalisé -->
+{% block extra_css %}
+<style>
+    .programme-card {
+        transition: transform 0.3s ease;
+    }
+    .programme-card:hover {
+        transform: translateY(-5px);
+    }
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+</style>
+{% endblock %}
 {% endblock %}

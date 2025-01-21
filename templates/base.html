@@ -31,7 +31,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ url_for('about') }}">À propos</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('president') }}">Le Président</a></li>
-                            <li><a class="dropdown-item" href="#">Notre équipe</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('team') }}">Notre équipe</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -39,8 +39,8 @@
                             Profession
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Métier de détective</a></li>
-                            <li><a class="dropdown-item" href="#">Réglementation</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('profession_detective') }}">Métier de détective</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('profession_reglementation') }}">Réglementation</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('activities') }}">Activités</a></li>
                         </ul>
                     </li>
@@ -52,9 +52,9 @@
                             Relation Client
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Services</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('client_services') }}">Services</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('contact') }}">Contact</a></li>
-                            <li><a class="dropdown-item" href="#">FAQ</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('client_faq') }}">FAQ</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -62,9 +62,9 @@
                             Formation et Certification
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Programmes</a></li>
-                            <li><a class="dropdown-item" href="#">Certification</a></li>
-                            <li><a class="dropdown-item" href="#">Calendrier</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('formation_programmes') }}">Programmes</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('formation_certification') }}">Certification</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('formation_calendrier') }}">Calendrier</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -72,9 +72,9 @@
                             Presse et Actualités
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Actualités</a></li>
-                            <li><a class="dropdown-item" href="#">Communiqués</a></li>
-                            <li><a class="dropdown-item" href="#">Médias</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('presse_actualites') }}">Actualités</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('presse_communiques') }}">Communiqués</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('presse_medias') }}">Médiathèque</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">

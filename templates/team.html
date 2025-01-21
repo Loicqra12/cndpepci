@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Notre Équipe{% endblock %}
+
+{% block extra_css %}
+<style>
+    .team-member {
+        transition: transform 0.3s ease;
+    }
+    .team-member:hover {
+        transform: translateY(-5px);
+    }
+    .team-member img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    .social-links a {
+        color: #333;
+        margin: 0 10px;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+    }
+    .social-links a:hover {
+        color: #007bff;
+    }
+    .commission-members {
+        font-size: 0.9rem;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- En-tête de la page -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">Notre Équipe</h1>
+        <p class="lead text-muted">Découvrez les membres du bureau exécutif de la CNDPEPCI qui œuvrent pour le développement et la professionnalisation du métier de détective privé en Côte d'Ivoire.</p>
+    </div>
+
+    <!-- Bureau Exécutif -->
+    <h2 class="text-center mb-4">Bureau Exécutif</h2>
+    <div class="row g-4 justify-content-center mb-5">
+        {% for member in executive_members %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card team-member h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/team/' + member.photo) }}" 
+                         alt="{{ member.name }}" 
+                         class="mb-3">
+                    <h3 class="h4 mb-2">{{ member.name }}</h3>
+                    <p class="text-primary mb-2">{{ member.position }}</p>
+                    <p class="text-muted mb-3">{{ member.description }}</p>
+                    <div class="social-links">
+                        {% if member.linkedin %}
+                        <a href="{{ member.linkedin }}" target="_blank"><i class="bi bi-linkedin"></i></a>
+                        {% endif %}
+                        {% if member.email %}
+                        <a href="mailto:{{ member.email }}"><i class="bi bi-envelope"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Commissions -->
+    <h2 class="text-center mb-4">Nos Commissions</h2>
+    <div class="row g-4 mb-5">
+        {% for commission in commissions %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi {{ commission.icon }} text-primary fs-2 me-3"></i>
+                        <h3 class="h5 mb-0">{{ commission.name }}</h3>
+                    </div>
+                    <p class="text-muted mb-3">{{ commission.description }}</p>
+                    <div class="commission-members">
+                        <strong>Membres :</strong><br>
+                        {% for member in commission.members %}
+                        <span class="badge bg-light text-dark me-2 mb-1">{{ member }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Appel à l'action -->
+    <div class="text-center mt-5">
+        <h2 class="h3 mb-4">Rejoignez Notre Équipe</h2>
+        <p class="text-muted mb-4">Vous souhaitez contribuer au développement de la profession ? Rejoignez-nous !</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary btn-lg">Contactez-nous</a>
+    </div>
+</div>
+{% endblock %}

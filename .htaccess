@@ -1,0 +1,24 @@
+PassengerEnabled on
+PassengerPython /home/cp679342p19/virtualenv/3.10.14/3.10/bin/python3.10
+PassengerAppType wsgi
+PassengerStartupFile passenger_wsgi.py
+
+# Protection des fichiers Python sauf passenger_wsgi.py
+<FilesMatch "^(?!passenger_wsgi\.py$).*\.py$">
+    Require all denied
+</FilesMatch>
+
+# Autoriser l'accès à .well-known
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Autoriser l'accès direct aux fichiers .well-known
+    RewriteCond %{REQUEST_URI} ^/\.well-known/
+    RewriteRule . - [L]
+    
+    # Pour toutes les autres requêtes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ passenger_wsgi.py [QSA,L]
+</IfModule>
