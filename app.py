@@ -1,5 +1,5 @@
 import os
-import pymysql
+import psycopg2
 from flask import Flask, render_template, redirect, url_for, flash, request, current_app, jsonify
 from flask_login import login_required, current_user, login_user, logout_user, LoginManager
 from werkzeug.utils import secure_filename
@@ -9,8 +9,8 @@ from models import User, Member, ForumTopic, ForumPost, ForumCategory, Page, New
 from error import configure_error_handlers
 from config import Config
 
-# Utiliser PyMySQL comme pilote MySQL
-pymysql.install_as_MySQLdb()
+# Utiliser psycopg2 comme pilote PostgreSQL
+import psycopg2
 
 def create_app():
     app = Flask(__name__)
