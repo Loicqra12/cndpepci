@@ -943,15 +943,17 @@ def create_app():
         def page_not_found(e):
             return render_template('errors/404.html'), 404
 
-        # Create database tables
-        db.create_all()
-
-        # Create admin user if it doesn't exist
-        if not User.query.filter_by(username='admin').first():
-            admin = User(username='admin', email='admin@cndpepci.ci', is_admin=True)
-            admin.set_password('admin')
-            db.session.add(admin)
-            db.session.commit()
+        @app.before_first_request
+        def initialize_database():
+            # Create database tables
+            with app.app_context():
+                db.create_all()
+                # Create admin user if it doesn't exist
+                if not User.query.filter_by(username='admin').first():
+                    admin = User(username='admin', email='admin@cndpepci.ci', is_admin=True)
+                    admin.set_password('admin')
+                    db.session.add(admin)
+                    db.session.commit()
 
     return app
 
