@@ -62,15 +62,25 @@ def create_app():
 
     app.add_member_with_photo = add_member_with_photo
 
+    # Register blueprints
+    from routes.main import main_bp
+    from routes.admin import admin_bp
+    from routes.forum import forum_bp
+    
+    app.register_blueprint(main_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+    app.register_blueprint(forum_bp, url_prefix='/forum')
+    
+    # Health check endpoint for Render
+    @app.route('/healthz')
+    def healthz():
+        return jsonify({"status": "healthy"}), 200
+    
     configure_error_handlers(app)
 
     with app.app_context():
         # Import models
         from models import User, Member, Page, News
-
-        # Register blueprints
-        from blueprints import init_app
-        init_app(app)
 
         # Routes
         @app.route('/')
