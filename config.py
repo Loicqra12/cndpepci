@@ -6,16 +6,12 @@ class Config:
     if database_url and database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://')
     
-    SQLALCHEMY_DATABASE_URI = database_url
+    # Ajouter sslmode=require à l'URL de la base de données
+    if database_url and '?' not in database_url:
+        database_url = database_url + '?sslmode=require'
+    
+    SQLALCHEMY_DATABASE_URI = database_url or 'postgresql://cndpepci_db_user:zdsNMumG2njiK6kc7xrXsBTyU3ejydh5@dpg-cu7v7g5d78s73bqeo10-a.oregon-postgres.render.com/cndpepci_db?sslmode=require'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        'connect_args': {
-            'sslmode': 'verify-full',
-            'ssl': {
-                'ssl_cert_reqs': 'CERT_REQUIRED'
-            }
-        }
-    }
     
     # Configuration de sécurité
     SECRET_KEY = os.environ.get('SECRET_KEY', 'ma_cle_secrete_tres_longue')
@@ -25,7 +21,7 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max-limit
     
     # Configuration Flask
-    FLASK_DEBUG = os.environ.get('FLASK_DEBUG', '1')
+    FLASK_DEBUG = os.environ.get('FLASK_DEBUG', '0')
     FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
     
     # Configuration email
