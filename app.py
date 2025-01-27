@@ -8,9 +8,10 @@ from flask_wtf.csrf import CSRFProtect
 from models import User, Member, ForumTopic, ForumPost, ForumCategory, Page, News
 from error import configure_error_handlers
 from config import Config
+from dotenv import load_dotenv
 
-# Utiliser psycopg2 comme pilote PostgreSQL
-import psycopg2
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
@@ -943,17 +944,15 @@ def create_app():
         def page_not_found(e):
             return render_template('errors/404.html'), 404
 
-        @app.before_first_request
-        def initialize_database():
-            # Create database tables
-            with app.app_context():
-                db.create_all()
-                # Create admin user if it doesn't exist
-                if not User.query.filter_by(username='admin').first():
-                    admin = User(username='admin', email='admin@cndpepci.ci', is_admin=True)
-                    admin.set_password('admin')
-                    db.session.add(admin)
-                    db.session.commit()
+        # Initialize database
+        with app.app_context():
+            db.create_all()
+            # Create admin user if it doesn't exist
+            if not User.query.filter_by(username='admin').first():
+                admin = User(username='admin', email='admin@cndpepci.ci', is_admin=True)
+                admin.set_password('admin')
+                db.session.add(admin)
+                db.session.commit()
 
     return app
 
