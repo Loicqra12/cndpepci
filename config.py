@@ -10,7 +10,7 @@ class Config:
     if database_url and '?' not in database_url:
         database_url = database_url + '?sslmode=require'
     
-    SQLALCHEMY_DATABASE_URI = database_url or 'postgresql://cndpepci_db_user:zdsNMumG2njiK6kc7xrXsBTyU3ejydh5@dpg-cu7v7g5d78s73bqeo10-a.oregon-postgres.render.com/cndpepci_db?sslmode=require'
+    SQLALCHEMY_DATABASE_URI = database_url or 'postgresql://cndpepci_db_user:zdsNMumG2njiK6kc7xrXsBTyU3ejydh5@dpg-cu7v7g5ds78s73bqeoi0-a.oregon-postgres.render.com/cndpepci_db?sslmode=require'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuration de sécurité
