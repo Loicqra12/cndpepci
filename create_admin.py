@@ -1,36 +1,35 @@
 from app import create_app
 from models import db, User
+from werkzeug.security import generate_password_hash
 
 app = create_app()
 
-def create_admin():
+def update_admin():
     with app.app_context():
-        # Vérifier si l'admin existe déjà
-        admin = User.query.filter_by(email='admin@cndpepci.ci').first()
+        # Trouver l'admin existant
+        admin = User.query.filter_by(username='admin').first()
         if admin:
-            print("L'administrateur existe déjà.")
-            return
-
-        # Créer un nouvel administrateur
-        admin = User(
-            username='admin',
-            email='admin@cndpepci.ci',
-            is_admin=True
-        )
-        admin.set_password('Admin@2024')  # Mot de passe par défaut
-        
-        try:
-            db.session.add(admin)
+            # Mettre à jour le mot de passe et l'email
+            admin.email = 'admin@cndpepci.org'
+            admin.password_hash = generate_password_hash('Cndpepci@2024')
+            admin.is_admin = True
             db.session.commit()
-            print("Administrateur créé avec succès!")
-            print("\nIdentifiants de connexion :")
-            print("----------------------------")
-            print("Email : admin@cndpepci.ci")
-            print("Mot de passe : Admin@2024")
-            print("\nConnectez-vous à : http://127.0.0.1:5000/admin")
-        except Exception as e:
-            print(f"Erreur lors de la création de l'administrateur : {str(e)}")
-            db.session.rollback()
+            print("Administrateur mis à jour avec succès!")
+            print("Email: admin@cndpepci.org")
+            print("Mot de passe: Cndpepci@2024")
+        else:
+            # Créer un nouvel administrateur si aucun n'existe
+            new_admin = User(
+                username='admin',
+                email='admin@cndpepci.org',
+                password_hash=generate_password_hash('Cndpepci@2024'),
+                is_admin=True
+            )
+            db.session.add(new_admin)
+            db.session.commit()
+            print("Nouvel administrateur créé avec succès!")
+            print("Email: admin@cndpepci.org")
+            print("Mot de passe: Cndpepci@2024")
 
 if __name__ == '__main__':
-    create_admin()
+    update_admin()
